@@ -1,8 +1,11 @@
 from fastapi import FastAPI
 
+from src.api.lifespan import lifespan
 from src.api.auth.routes import router
 
-app = FastAPI()
+app = FastAPI(
+    lifespan=lifespan,
+)
 
 
 @app.get("/")

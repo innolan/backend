@@ -14,8 +14,8 @@ pydantic = "^2.7.4"
 psycopg2 = "^2.9.9"
 sqlalchemy = "^2.0.31"
 alembic = "^1.13.1"
-psycopg2-binary = "^2.9.9"
 python-dotenv = "^1.0.1"
+asyncpg = "^0.29.0"
 
 
 [build-system]
