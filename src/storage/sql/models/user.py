@@ -8,16 +8,16 @@ from src.storage.sql.__mixin__ import IdMixin
 class User(Base, IdMixin):
     __tablename__ = "users"
 
-    Profile_ID: Mapped[int] = mapped_column(
+    profile_id: Mapped[int] = mapped_column(
         ForeignKey("profiles.id"),
         nullable=True,
     )
-    Participant_ID: Mapped[int] = mapped_column(
+    participant_id: Mapped[int] = mapped_column(
         ForeignKey("participants.id"),
         nullable=True,
     )
-    Tg_id = mapped_column(BigInteger)
-    User_name: Mapped[str] = mapped_column(String(30))
+    tg_id = mapped_column(BigInteger)
+    username: Mapped[str] = mapped_column(String(30))
 
     user_profile = relationship(
         "Profile",
