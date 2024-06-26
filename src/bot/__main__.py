@@ -11,7 +11,7 @@ from src.bot.app.handlers import router
 async def on_startup() -> None:
     load_dotenv()
     basicConfig(level=INFO)
-    bot = Bot(token=getenv('TOKEN'))
+    bot = Bot(token=getenv('BOT_TOKEN'))
     dp = Dispatcher()
     dp.include_router(router)
     await dp.start_polling(bot)
