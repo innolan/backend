@@ -3,7 +3,7 @@ from fastapi import APIRouter
 from src.schemas.profile import UserProfile
 from src.repositories.profiles.profileRepository import profile_repository
 
-profileRouter = APIRouter(prefix="/profiles")
+profileRouter = APIRouter(prefix="/profile")
 
 @profileRouter.post("/create")
 async def createProfile(profile: UserProfile):

@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, APIRouter
 
 from src.api.lifespan import lifespan
 from src.api.auth.routes import router
@@ -8,10 +8,12 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
+apiRouter = APIRouter(prefix="/api")
+apiRouter.include_router(router)
+apiRouter.include_router(profileRouter)
 
 @app.get("/")
 async def root():
     return {"message": "Hello World"}
 
-app.include_router(router)
-app.include_router(profileRouter)
+app.include_router(apiRouter)
