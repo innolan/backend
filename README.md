@@ -7,5 +7,5 @@
 1. Install dependencies
 `poetry install --no-root`
 2. Run the ASGI server
-`poetry run python -m lan_backend`
+`poetry run python -m src.api`
 3. Check `localhost:8000`
