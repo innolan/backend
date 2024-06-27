@@ -17,6 +17,7 @@ if config.config_file_name is not None:
 # READ OUR CONFIGURATION
 from src.config import dburl  # noqa: E402
 
+dburl = dburl[:10] + dburl[18:]
 config.set_main_option("sqlalchemy.url", dburl)
 
 # add your model's MetaData object here
