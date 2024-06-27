@@ -12,21 +12,24 @@ router = Router()
 
 @router.message(CommandStart())
 async def cmd_start(msg: Message) -> None:
-    client = httpx.AsyncClient(base_url="http://localhost:8000")
     user = msg.from_user
-    test = await client.post(
+    
+    client = httpx.AsyncClient(base_url="http://localhost:8000")
+    
+    await client.post(
         "/auth/signin",
         json=Signin(
             id=user.id,
             first_name=user.first_name,
             last_name=user.last_name,
             username=user.username,
-            auth_date=datetime.now()
+            auth_date=datetime.now(),
         ),
     )
-    print(user.get_profile_photos().model_dump())
-    print(test.json())
-    await msg.answer("Hi", reply_markup=kb.start)
+    await msg.answer(
+        "Hi",
+        # reply_markup=kb.start,
+    )
 
 
 @router.message(Command("help"))
