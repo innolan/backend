@@ -33,11 +33,11 @@ class SqlProfileRepository:
 
     async def update(self, id: int, profile: CreateProfile) -> Profile | None:
         async with self._create_session() as session:
-            db_profile = await session.get(Profile, id)
-            if db_profile:
-                db_profile = Profile(**profile.model_dump())
+            profile = await session.get(Profile, id)
+            if profile:
+                profile = Profile(**profile.model_dump())
                 await session.commit()
-                return db_profile
+                return profile
 
     async def delete(self, id: int) -> Profile | None:
         async with self._create_session() as session:
