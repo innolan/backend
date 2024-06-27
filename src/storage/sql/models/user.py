@@ -8,7 +8,7 @@ from src.storage.sql.__mixin__ import IdMixin
 class User(Base, IdMixin):
     __tablename__ = "users"
 
-    tg_id: Mapped[int] = mapped_column()
+    tg_id = mapped_column(BigInteger)
     profile_id: Mapped[int] = mapped_column(
         ForeignKey("profiles.id"),
         nullable=True,
