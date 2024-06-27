@@ -39,12 +39,13 @@ class SqlProfileRepository:
                 await session.commit()
                 return db_profile
 
-    async def delete(self, id: int) -> None:
+    async def delete(self, id: int) -> Profile | None:
         async with self._create_session() as session:
             profile = await session.get(Profile, id)
             if profile:
                 await session.delete(profile)
                 await session.commit()
+                return profile
 
 
 profile_repository: SqlProfileRepository = SqlProfileRepository()

@@ -29,6 +29,8 @@ async def updateProfile(id: int, profile: CreateProfile, response: Response):
 
 
 @profileRouter.delete("/delete/{id}")
-async def deleteProfile(id: int):
-    await profile_repository.delete(id)
-    return {}
+async def deleteProfile(id: int, response: Response):
+    result = await profile_repository.delete(id)
+    if not result:
+        response.status_code = status.HTTP_404_NOT_FOUND
+    return result if result else {}
