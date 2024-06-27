@@ -5,10 +5,11 @@ from src.repositories.profiles.profileRepository import profile_repository
 
 profileRouter = APIRouter(prefix="/profile")
 
+# Disallowed temporarily, since the profile is created on sign in anyway
 
-@profileRouter.post("/create")
-async def createProfile(profile: CreateProfile, status_code=201):
-    await profile_repository.create(profile)
+# @profileRouter.post("/create")
+# async def createProfile(profile: CreateProfile, status_code=201):
+#     await profile_repository.create(profile)
 
 
 @profileRouter.get("/get/{id}")
