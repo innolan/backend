@@ -25,6 +25,3 @@ class Profile(Base, IdMixin):
 
     profile_user = relationship("User", back_populates="user_profile")
     profile_metric = relationship("Metric", back_populates="metric_profile")
-
-    # profile_match1 = relationship("Match", back_populates='match1_profile')
-    # profile_match2 = relationship("Match", back_populates='match2_profile')

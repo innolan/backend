@@ -18,5 +18,5 @@ class Match(Base, IdMixin):
         nullable=True,
     )
 
-    match1_profile = relationship("Profile", back_populates='profile_match1', foreign_keys=[profileid_1])
-    match2_profile = relationship("Profile", back_populates='profile_match2', foreign_keys=[profileid_2])
+    match1_profile = relationship("Profile", backref="user1", foreign_keys=[profileid_1])
+    match2_profile = relationship("Profile", backref="user2", foreign_keys=[profileid_2])
