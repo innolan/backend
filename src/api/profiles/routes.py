@@ -1,9 +1,11 @@
+__all__ = ['router']
+
 from fastapi import APIRouter, Response, status
 
 from src.schemas.signin import CreateProfile
 from src.repositories.profiles.profileRepository import profile_repository
 
-profileRouter = APIRouter(prefix="/profile")
+router = APIRouter(prefix="/profile")
 
 # Disallowed temporarily, since the profile is created on sign in anyway
 
@@ -12,7 +14,7 @@ profileRouter = APIRouter(prefix="/profile")
 #     await profile_repository.create(profile)
 
 
-@profileRouter.get("/get/{id}")
+@router.get("/get/{id}")
 async def getProfile(id: int, response: Response):
     result = await profile_repository.get(id)
     if not result:
@@ -20,7 +22,7 @@ async def getProfile(id: int, response: Response):
     return result if result else {}
 
 
-@profileRouter.put("/update/{id")
+@router.put("/update/{id")
 async def updateProfile(id: int, profile: CreateProfile, response: Response):
     result = await profile_repository.update(id, profile)
     if not result:
@@ -28,7 +30,7 @@ async def updateProfile(id: int, profile: CreateProfile, response: Response):
     return result if result else {}
 
 
-@profileRouter.delete("/delete/{id}")
+@router.delete("/delete/{id}")
 async def deleteProfile(id: int, response: Response):
     result = await profile_repository.delete(id)
     if not result:
