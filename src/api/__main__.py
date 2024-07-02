@@ -20,7 +20,6 @@ ssl_args =(
     else []
 )
 
-
 uvicorn.main.main(
     [
         "src.api.app:app",
