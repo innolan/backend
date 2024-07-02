@@ -1,0 +1,32 @@
+services:
+  backend:
+    image: ghcr.io/innolan/backend 
+    env_file:
+      - ".env"
+    ports:
+      - "80:8000"
+    build: 
+      context: .
+    pull_policy: build
+    develop:
+      watch:
+        - action: rebuild
+          path: .
+          target: /code
+    environment:
+      PROD: true
+      CERTIFICATE_CA: /run/secrets/certificate_ca.crt
+      CERTIFICATE: /run/secrets/certificate.crt
+      CERTIFICATE_KEY: /run/secrets/certificate.key
+    secrets:
+      - certificate_ca.crt
+      - certificate.crt
+      - certificate.key
+
+secrets: 
+  certificate_ca.crt: 
+    file: ./certs/certificate_ca.crt
+  certificate.crt: 
+    file: ./certs/certificate.crt
+  certificate.key:
+    file: ./certs/certificate.key

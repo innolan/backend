@@ -9,11 +9,12 @@ os.chdir(Path(__file__).parents[2])
 # Get arguments from command
 args = sys.argv[1:]
 
-ssl_args = (
+ssl_args =( 
     [
-        "--ssl-ca-certs=./certs/certificate_ca.crt",
-        "--ssl-keyfile=./certs/certificate.key",
-        "--ssl-certfile=./certs/certificate.crt",
+        "--ssl-ca-certs=/run/secrets/certificate_ca.crt",
+        "--ssl-keyfile=/run/secrets/certificate.key",
+        "--ssl-certfile=/run/secrets/certificate.crt",
+        "--host=0.0.0.0"
     ]
     if os.getenv("PROD")
     else []
