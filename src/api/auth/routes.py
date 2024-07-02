@@ -1,3 +1,5 @@
+__all__ = ['router']
+
 from fastapi import APIRouter, Depends
 
 from src.schemas.signin import Signin
