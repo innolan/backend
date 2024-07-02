@@ -1,0 +1,45 @@
+name: Docker Build and Deploy
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+
+  build-and-push:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v2
+    
+    - name: Build and push Docker image
+      uses: docker/build-push-action@v2
+      with:
+        username: ${{ github.actor }}
+        password: ${{ secrets.TOKEN }}
+        registry: ghcr.io
+        repository: ${{ github.repository_owner }}/${{ github.event.repository.name }}
+        tag_with_ref: true
+        
+  deploy:
+    needs: build-and-push
+    
+    steps:
+    - name: Deploy to production server
+      env:
+        HOST: ${{ secrets.HOST }}
+        USERNAME: ${{ secrets.USERNAME }}
+        PASSWORD: ${{ secrets.PASSWORD }}
+      run: |
+            # SSH into the production server
+            ssh $USERNAME@$HOST "
+              # Pull the latest Docker image
+              # docker pull ghcr.io/innolan/backend:latest # Compose already does this it seems
+              
+              # Stop and remove the existing container
+              docker stop ghcr.io/innolan/backend
+              docker rm ghcr.io/innolan/backend
+              
+              # Run the new container
+              docker compose -f compose.prod.yaml up -d
+            "
