@@ -5,7 +5,7 @@ from typing import Self
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from src.schemas.profile import Signin
+from src.schemas.signin import Signin
 from src.storage.sql.models import User, Profile
 from src.storage.sql.storage import AbstractSQLAlchemyStorage
 
