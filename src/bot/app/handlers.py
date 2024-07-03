@@ -14,21 +14,21 @@ router = Router()
 async def cmd_start(msg: Message) -> None:
     user = msg.from_user
     
-    client = httpx.AsyncClient(base_url="http://localhost:8000")
+    # client = httpx.AsyncClient(base_url="http://localhost:8000")
     
-    await client.post(
-        "/auth/signin",
-        json=Signin(
-            id=user.id,
-            first_name=user.first_name,
-            last_name=user.last_name,
-            username=user.username,
-            auth_date=datetime.now(),
-        ),
-    )
+    # await client.post(
+    #     "/auth/signin",
+    #     json=Signin(
+    #         id=user.id,
+    #         first_name=user.first_name,
+    #         last_name=user.last_name,
+    #         username=user.username,
+    #         auth_date=datetime.now(),
+    #     ),
+    # )
     await msg.answer(
         "Hi",
-        # reply_markup=kb.start,
+        reply_markup=kb.start,
     )
 
 

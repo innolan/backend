@@ -12,4 +12,4 @@ class Signin(BaseModel):
     username: str
     photo_url: str
     auth_date: datetime
-    # hash: str # TODO Once the domain is up, switch to LoginUrl pipeline
+    hash: str # TODO Once the domain is up, switch to LoginUrl pipeline
