@@ -10,4 +10,6 @@ router = APIRouter(prefix="/auth")
 
 @router.post("/signin")
 async def signin(signin: Signin = Depends()):
-    created = await auth_repository.signin(signin)
+    user, profile = await auth_repository.signin(signin)
+    
+    return (user, profile)
