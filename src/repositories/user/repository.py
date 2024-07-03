@@ -1,5 +1,6 @@
 __all__ = ["SqlUserRepository", "user_repository"]
 
+
 from typing import Self
 
 from sqlalchemy import select
@@ -8,6 +9,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from src.schemas.userinfo import ProcessedMetric, UpdateUserInfo, UserInfo
 from src.storage.sql.models import User, Profile, Metric
 from src.storage.sql.storage import AbstractSQLAlchemyStorage
+from src.exceptions import NoUserException, NoProfileException
 
 
 class SqlUserRepository:
@@ -25,15 +27,12 @@ class SqlUserRepository:
             # Get user
             user = await session.get(User, id)
             if not user:
-                return
-                # raise NoUserException # TODO
+                raise NoUserException()
 
             # Get profile
             profile = await session.get(Profile, user.profile_id)
-            # TODO
             if not profile:
-                return
-                # raise NoProfileException # TODO
+                raise NoProfileException()
 
             # Aggregate all metrics (really fucking bad)
             query = select(Metric).where(Metric.profile_id == profile.id)
@@ -67,15 +66,12 @@ class SqlUserRepository:
             # Get user
             user = await session.get(User, id)
             if not user:
-                return
-                # raise NoUserException # TODO
+                raise NoUserException()
 
             # Get profile
             profile = await session.get(Profile, user.profile_id)
-            # TODO
             if not profile:
-                return
-                # raise NoProfileException # TODO
+                raise NoProfileException()
 
             # Update
             user.first_name = update.first_name | user.first_name
