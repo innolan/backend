@@ -14,7 +14,7 @@ jobs:
       - name: push-to-ghcr
         uses: macbre/push-to-ghcr@v14
         with:
-          password: ${{ secrets.TOKEN }}
+          github_token: ${{ secrets.TOKEN }}
           image_name: backend
 
   deploy:
