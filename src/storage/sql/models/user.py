@@ -11,15 +11,15 @@ from src.storage.sql.models.base import Base
 class User(Base, IdMixin):
     __tablename__ = "users"
 
+    # Attributes
     tg_id = mapped_column(BigInteger)
-
     first_name: Mapped[str] = mapped_column(String(40))
     last_name: Mapped[Optional[str]] = mapped_column(String(40))
     username: Mapped[str] = mapped_column(String(60))
     photo_url: Mapped[str] = mapped_column(String(200))
-    auth_date: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True),
-    )
+    auth_date: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+
+    # Relations
     profile_id: Mapped[int] = mapped_column(
         ForeignKey("profiles.id"),
         nullable=True,
@@ -28,7 +28,6 @@ class User(Base, IdMixin):
         ForeignKey("participants.id"),
         nullable=True,
     )
-
     user_profile = relationship(
         "Profile",
         back_populates="profile_user",
