@@ -3,7 +3,7 @@ __all__ = ['router']
 from fastapi import APIRouter, Response, status
 
 from src.schemas.signin import CreateProfile
-from src.repositories.profiles.profileRepository import profile_repository
+from src.repositories.profiles.repository import profile_repository
 
 router = APIRouter(prefix="/profile")
 
