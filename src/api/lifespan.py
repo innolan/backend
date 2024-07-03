@@ -9,11 +9,9 @@ from src.config import dburl
 
 async def setup_repositories() -> SQLAlchemyStorage:
     from src.repositories.auth.repository import auth_repository
-    from src.repositories.profiles.repository import profile_repository
 
     storage = SQLAlchemyStorage.from_url(dburl)
     auth_repository.update_storage(storage)
-    profile_repository.update_storage(storage)
 
     return storage
 
