@@ -6,7 +6,7 @@ from pydantic import BaseModel
 
 
 class Signin(BaseModel):
-    tg_id: int
+    id: int
     first_name: str
     last_name: Optional[str] = None
     username: str
