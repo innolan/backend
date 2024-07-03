@@ -37,15 +37,15 @@ class SqlUserRepository:
 
             # Aggregate all metrics (really fucking bad)
             query = select(Metric).where(Metric.profile_id == profile.id)
-            metrics = list(
-                map(
-                    lambda m: ProcessedMetric(
-                        name=m.name,
-                        value=float(m.value - 50) / 100,
-                    ),
-                    (await session.execute(query)).scalars().all(),
-                )
-            )
+            # metrics = list(
+            #     map(
+            #         lambda m: ProcessedMetric(
+            #             name=m.name,
+            #             value=float(m.value - 50) / 100,
+            #         ),
+            #         (await session.execute(query)).scalars().all(),
+            #     )
+            # )
 
             # Merge everything into a UserInfo object
             return UserInfo(
@@ -59,7 +59,7 @@ class SqlUserRepository:
                 religion=profile.religion,
                 hobby=profile.hobby,
                 soc_media=profile.soc_media,
-                metrics=metrics,
+                # metrics=metrics,
             )
 
 
