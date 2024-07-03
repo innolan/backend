@@ -33,7 +33,7 @@ class SqlAuthRepository:
             # Otherwise
             profile = Profile()
             session.add(profile)
-            session.flush()  # "Soft" save and generate ID
+            await session.flush()  # "Soft" save and generate ID
 
             # Create user
             user = User(
