@@ -17,7 +17,7 @@ class Profile(Base, IdMixin):
     photo_url: Mapped[str] = mapped_column(String(200))
     date_of_birth: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),
-        server_default=func.now(),
+        nullable=True,
     )
     sex: Mapped[int] = mapped_column(nullable=True)
     religion: Mapped[str] = mapped_column(String(40), nullable=True)
