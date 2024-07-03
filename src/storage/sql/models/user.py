@@ -1,3 +1,4 @@
+from dataclasses import dataclass
 from datetime import datetime
 from typing import Optional
 
@@ -8,6 +9,7 @@ from src.storage.sql.__mixin__ import IdMixin
 from src.storage.sql.models.base import Base
 
 
+@dataclass
 class User(Base, IdMixin):
     __tablename__ = "users"
 
@@ -19,20 +21,12 @@ class User(Base, IdMixin):
     photo_url: Mapped[str] = mapped_column(String(200))
     auth_date: Mapped[datetime] = mapped_column(DateTime(timezone=True))
 
-    # Relations
-    profile_id: Mapped[int] = mapped_column(
-        ForeignKey("profiles.id"),
-        nullable=True,
-    )
+    # Foreign keys
+    profile_id: Mapped[int] = mapped_column(ForeignKey("profiles.id"), nullable=True)
     participant_id: Mapped[int] = mapped_column(
-        ForeignKey("participants.id"),
-        nullable=True,
+        ForeignKey("participants.id"), nullable=True
     )
-    user_profile = relationship(
-        "Profile",
-        back_populates="profile_user",
-    )
-    user_participant = relationship(
-        "Participant",
-        back_populates="participant_user",
-    )
+    
+    # Relations
+    _user_profile = relationship("Profile", back_populates="_profile_user")
+    _user_participant = relationship("Participant", back_populates="_participant_user")
