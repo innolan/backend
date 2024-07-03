@@ -23,7 +23,7 @@ class SqlAuthRepository:
     async def signin(self, signin: Signin) -> tuple[User, Profile]:
         async with self._create_session() as session:
             # Look for a user by TG ID
-            query = select(User).where(User.tg_id == signin.tg_id)
+            query = select(User).where(User.tg_id == signin.id)
             user_obj = await session.scalar(query)
 
             # If the user exists, return
@@ -37,7 +37,7 @@ class SqlAuthRepository:
 
             # Create user
             user = User(
-                tg_id=signin.tg_id,
+                tg_id=signin.id,
                 first_name=signin.first_name,
                 last_name=signin.last_name,
                 username=signin.username,

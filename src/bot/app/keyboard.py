@@ -10,7 +10,7 @@ start = InlineKeyboardMarkup(
             InlineKeyboardButton(
                 text="Registration",
                 login_url=LoginUrl(
-                    url="innolan.ru/signin",
+                    url="https://innolan.ru/api/auth/signin",
                     bot_username="innolan_staging_bot",
                     request_write_access=True,
                 ),

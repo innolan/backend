@@ -6,10 +6,10 @@ from pydantic import BaseModel
 
 
 class Signin(BaseModel):
-    tg_id: int
+    id: int
     first_name: str
     last_name: Optional[str] = None
     username: str
     photo_url: str
     auth_date: datetime
-    # hash: str # TODO Once the domain is up, switch to LoginUrl pipeline
+    hash: str # TODO Once the domain is up, switch to LoginUrl pipeline
