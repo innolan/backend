@@ -1,4 +1,4 @@
-__all__ = ['router']
+__all__ = ["router"]
 
 from fastapi import APIRouter, Depends, Response, status
 
@@ -9,11 +9,11 @@ router = APIRouter(prefix="/auth")
 
 
 @router.get("/signin")
-async def signin(response: Response, signin: Signin = Depends()):
+async def signin(response: Response, signin: Signin = Depends()): # TODO Add return type
     result = await auth_repository.signin(signin)
     if result:
         user, profile = result
         return (user, profile)
-    else: 
+    else:
         response.status_code = status.HTTP_409_CONFLICT
         return {"message": "User already signed in"}
