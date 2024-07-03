@@ -15,8 +15,8 @@ async def getUserInfo(id: int, response: Response) -> UserInfo | None:
         response.status_code = status.HTTP_404_NOT_FOUND
     return result if result else {}
 
-@router.get("/update/{id}")
-async def getUserInfo(id: int, update: UpdateUserInfo) -> UserInfo | None:
+@router.post("/update/{id}")
+async def getUserInfo(id: int, update: UpdateUserInfo, response: Response) -> UserInfo | None:
     result = await user_repository.update(id, update)
     if not result:
         response.status_code = status.HTTP_404_NOT_FOUND
