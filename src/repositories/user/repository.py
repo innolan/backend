@@ -25,14 +25,16 @@ class SqlUserRepository:
             # Get user
             user = await session.get(User, id)
             if not user:
-                return 
-            
+                return
+                # raise NoUserException # TODO
+
             # Get profile
             profile = await session.get(Profile, user.profile_id)
             # TODO
-            # if not profile:
-            #     raise NoProfileException
-            
+            if not profile:
+                return
+                # raise NoProfileException # TODO
+
             # Aggregate all metrics (really fucking bad)
             query = select(Metric).where(Metric.profile_id == profile.id)
             metrics = list(
