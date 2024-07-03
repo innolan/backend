@@ -26,7 +26,7 @@ class UserInfo(BaseModel):
     about: Optional[str] = None
     hobby: Optional[list[str]] = None
     soc_media: Optional[list[str]] = None
-    metrics: Optional[list[ProcessedMetric]] = None
+    metrics: Optional[list[ProcessedMetric] | list[None]]           
 
 
 class GetUserInfo(UserInfo):

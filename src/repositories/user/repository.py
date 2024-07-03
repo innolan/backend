@@ -5,7 +5,6 @@ from typing import Self
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from src.storage.sql.models.base import Base
 from src.schemas.userinfo import ProcessedMetric, UserInfo
 from src.storage.sql.models import User, Profile, Metric
 from src.storage.sql.storage import AbstractSQLAlchemyStorage
@@ -21,12 +20,19 @@ class SqlUserRepository:
     def _create_session(self) -> AsyncSession:
         return self.storage.create_session()
 
-    async def get(self, id: int) -> UserInfo:
+    async def get(self, id: int) -> UserInfo | None:
         async with self._create_session() as session:
             # Get user
             user = await session.get(User, id)
+            if not user:
+                return 
+            
             # Get profile
             profile = await session.get(Profile, user.profile_id)
+            # TODO
+            # if not profile:
+            #     raise NoProfileException
+            
             # Aggregate all metrics (really fucking bad)
             query = select(Metric).where(Metric.profile_id == profile.id)
             metrics = list(
