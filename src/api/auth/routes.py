@@ -1,19 +1,24 @@
 __all__ = ["router"]
 
-from fastapi import APIRouter, Depends, Response, status
+from fastapi import APIRouter, Depends, HTTPException, Response, status
 
 from src.schemas.signin import Signin
 from src.repositories.auth.repository import auth_repository
+from src.exceptions import Message, UserHaveAlreadySignedInMessage
 
 router = APIRouter(prefix="/auth")
 
 
-@router.get("/signin")
-async def signin(response: Response, signin: Signin = Depends()): # TODO Add return type
-    result = await auth_repository.signin(signin)
-    if result:
-        user, profile = result
-        return (user, profile)
-    else:
-        response.status_code = status.HTTP_409_CONFLICT
-        return {"message": "User already signed in"}
+@router.get(
+    "/signin",
+    responses={
+        409: {"model": UserHaveAlreadySignedInMessage},
+    },
+)
+async def signin(
+    response: Response, signin: Signin = Depends()
+):  # TODO Add return type
+    try:
+        return await auth_repository.signin(signin)
+    except HTTPException as e:
+        return Message(e.detail)
