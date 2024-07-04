@@ -33,8 +33,8 @@ jobs:
             # docker pull ghcr.io/innolan/backend:latest # Compose already does this it seems
 
             # Stop and remove the existing container
-            docker stop ghcr.io/innolan/backend
-            docker rm ghcr.io/innolan/backend
+            docker stop root-backend-1
+            docker rm root-backend-1
 
             # Run the new container
             docker compose -f compose.prod.yaml up -d
