@@ -5,9 +5,8 @@ __all__ = [
 
 from datetime import datetime
 from typing import Optional
-from pydantic import BaseModel
 
-from src.storage.sql.models.metric import Metric
+from pydantic import BaseModel
 
 
 class ProcessedMetric(BaseModel):

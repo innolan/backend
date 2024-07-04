@@ -6,10 +6,10 @@ from typing import Self
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from src.schemas.userinfo import ProcessedMetric, UpdateUserInfo, UserInfo
+from src.exceptions import NoUserException, NoProfileException
+from src.schemas.userinfo import UpdateUserInfo, UserInfo
 from src.storage.sql.models import User, Profile, Metric
 from src.storage.sql.storage import AbstractSQLAlchemyStorage
-from src.exceptions import NoUserException, NoProfileException
 
 
 class SqlUserRepository:
