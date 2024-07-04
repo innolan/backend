@@ -1,17 +1,17 @@
 from asyncio import run
 from logging import basicConfig, INFO
-from os import getenv
 
 from aiogram import Dispatcher, Bot
 from dotenv import load_dotenv
 
 from src.bot.app.handlers import router
+from src.config import bot_token
 
 
 async def on_startup() -> None:
     load_dotenv()
     basicConfig(level=INFO)
-    bot = Bot(token=getenv('BOT_TOKEN'))
+    bot = Bot(bot_token)
     dp = Dispatcher()
     dp.include_router(router)
     await dp.start_polling(bot)
