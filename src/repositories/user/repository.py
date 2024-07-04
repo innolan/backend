@@ -74,17 +74,17 @@ class SqlUserRepository:
                 raise NoProfileException()
 
             # Update
-            user.first_name = update.first_name | user.first_name
-            user.last_name = update.last_name | user.last_name
-            user.username = update.username | user.username
-            user.photo_url = update.photo_url | user.photo_url
-
-            profile.date_of_birth = update.date_of_birth | profile.date_of_birth
-            profile.sex = update.sex | profile.sex
-            profile.religion = update.religion | profile.religion
-            profile.hobby = update.hobby | profile.hobby
-            profile.soc_media = update.soc_media | profile.soc_media
             # metrics = update.metrics | profile.metrics
+            user.first_name = update.first_name or user.first_name
+            user.last_name = update.last_name or user.last_name
+            user.username = update.username or user.username
+            user.photo_url = update.photo_url or user.photo_url
+
+            profile.date_of_birth = update.date_of_birth or profile.date_of_birth
+            profile.sex = update.sex or profile.sex
+            profile.religion = update.religion or profile.religion
+            profile.hobby = update.hobby or profile.hobby
+            profile.soc_media = update.soc_media or profile.soc_media
 
             session.add(user)
             session.add(profile)
