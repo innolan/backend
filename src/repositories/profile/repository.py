@@ -6,7 +6,7 @@ from typing import Self
 from sqlalchemy import delete, insert, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from src.schemas.userinfo import MetricDTO, ProfileDTO
+from src.schemas.userinfo import MetricDTO, ProfileDTO, ProfileDTOUpd
 from src.storage.sql.models import Profile, Metric
 from src.storage.sql.storage import AbstractSQLAlchemyStorage
 from src.exceptions import NoProfileException
@@ -32,10 +32,8 @@ class SqlProfileRepository:
             # Get metrics
             metrics = await reps.metric_repository.get_by_profile_id(profile_id)
             # Validate profile and add metrics            
-            profile_dto = ProfileDTO.model_validate(profile)
-            print(profile_dto)
+            profile_dto = ProfileDTOUpd.model_validate(profile)
             profile_dto.metrics = metrics
-            print(profile_dto)
             
             return profile_dto
 

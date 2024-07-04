@@ -3,10 +3,11 @@ __all__ = ["user_repository"]
 
 from typing import Self
 
+from pydantic import ValidationError
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.repositories import profile_repository
-from src.schemas.userinfo import UpdateUserInfo, UserInfo
+from src.schemas.userinfo import ProfileDTOUpd, UpdateUserInfo, UserDTOUpd, UserInfo
 from src.storage.sql.models import User
 from src.storage.sql.storage import AbstractSQLAlchemyStorage
 from src.exceptions import NoUserException, NoProfileException
@@ -25,27 +26,19 @@ class SqlUserRepository:
     async def get(self, id: int) -> UserInfo | None:
         async with self._create_session() as session:
             # Get user
-            user = await session.get(User, id)
-            if not user:
+            raw_user = await session.get(User, id)
+            if not raw_user:
                 raise NoUserException()
+            user = UserDTOUpd.model_validate(raw_user)
+        
             # Get profile
-            profile = await profile_repository.get(user.profile_id)
-            if not profile:
+            raw_profile = await profile_repository.get(raw_user.profile_id)
+            if not raw_profile:
                 raise NoProfileException()
+            profile = ProfileDTOUpd.model_validate(raw_profile)
+
             # Merge everything into a UserInfo object
-            return UserInfo(
-                first_name=user.first_name,
-                last_name=user.last_name,
-                username=user.username,
-                photo_url=user.photo_url,
-                about=profile.about,
-                date_of_birth=profile.date_of_birth,
-                sex=profile.sex,
-                religion=profile.religion,
-                hobby=profile.hobby,
-                soc_media=profile.soc_media,
-                metrics=profile.metrics,
-            )
+            return UserInfo(**(user.model_dump() | profile.model_dump()))
 
     async def update(self, id: int, update: UpdateUserInfo) -> UserInfo | None:
         async with self._create_session() as session:

@@ -35,8 +35,8 @@ class MetricDTOAdd(BaseModel):
         from_attributes = True
 
 
-class ProfileDTO(BaseModel):
-    id: int
+class ProfileDTOUpd(BaseModel):
+    date_of_birth: Optional[datetime] = None
     about: Optional[str] = None
     date_of_birth: Optional[datetime] = None
     sex: Optional[int] = None
@@ -49,6 +49,23 @@ class ProfileDTO(BaseModel):
     class Config:
         from_attributes = True
 
+
+class ProfileDTO(ProfileDTOUpd):
+    id: int
+
+
+class UserDTOUpd(BaseModel):
+    # profile_id: Optional[int] = None
+    photo_url: Optional[str] = None
+    first_name: Optional[str] = None
+    last_name: Optional[str] = None
+    username: Optional[str] = None
+    
+    class Config:
+        from_attributes = True
+
+class UserDTO(UserDTOUpd):
+    id: int
 
 class UserInfo(BaseModel):
     photo_url: Optional[str] = None
