@@ -32,4 +32,4 @@ async def getUserInfo(id: int, update: UpdateUserInfo) -> UserInfo | Message:
     try:
         return await user_repository.update(id, update)
     except HTTPException as e:
-        return Message(e)
+        return Message(e.detail)
