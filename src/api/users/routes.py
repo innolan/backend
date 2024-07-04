@@ -6,7 +6,7 @@ from src.repositories.user.repository import user_repository
 from src.schemas.userinfo import UpdateUserInfo, UserInfo
 from src.exceptions import Message
 
-router = APIRouter(prefix="/users")
+router = APIRouter(prefix="/users", tags=["Users"])
 
 
 @router.get(

@@ -8,12 +8,18 @@ from src.storage.sql.storage import SQLAlchemyStorage
 
 
 async def setup_repositories() -> SQLAlchemyStorage:
-    from src.repositories.user.repository import user_repository
-    from src.repositories.auth.repository import auth_repository
+    from src.repositories import (
+        user_repository,
+        auth_repository,
+        profile_repository,
+        metric_repository,
+    )
 
     storage = SQLAlchemyStorage.from_url(dburl)
     auth_repository.update_storage(storage)
     user_repository.update_storage(storage)
+    profile_repository.update_storage(storage)
+    metric_repository.update_storage(storage)
 
     return storage
 

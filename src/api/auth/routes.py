@@ -6,7 +6,7 @@ from src.schemas.signin import Signin
 from src.repositories.auth.repository import auth_repository
 from src.exceptions import Message, UserHaveAlreadySignedInMessage
 
-router = APIRouter(prefix="/auth")
+router = APIRouter(prefix="/auth", tags=["Auth"])
 
 
 @router.get(
