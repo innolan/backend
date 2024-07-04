@@ -21,12 +21,6 @@ class User(Base, IdMixin):
     photo_url: Mapped[str] = mapped_column(String(200))
     auth_date: Mapped[datetime] = mapped_column(DateTime(timezone=True))
 
-    # Foreign keys
-    profile_id: Mapped[int] = mapped_column(ForeignKey("profiles.id"), nullable=True)
-    participant_id: Mapped[int] = mapped_column(
-        ForeignKey("participants.id"), nullable=True
-    )
-    
     # Relations
-    _user_profile = relationship("Profile", back_populates="_profile_user")
-    _user_participant = relationship("Participant", back_populates="_participant_user")
+    _user_profile = relationship("Profile", back_populates="_profile_user", cascade="all, delete-orphan")
+    _user_participant = relationship("Participant", back_populates="_participant_user", cascade="all, delete-orphan")

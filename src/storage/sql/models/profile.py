@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from datetime import datetime
 from typing import List, Optional
 
-from sqlalchemy import Column, DateTime, Integer, String
+from sqlalchemy import Column, DateTime, Integer, String, ForeignKey
 from sqlalchemy.dialects.postgresql import ARRAY
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
@@ -22,6 +22,9 @@ class Profile(Base, IdMixin):
     hobby: Mapped[list[str]] = mapped_column(ARRAY(String), nullable=True)
     soc_media: Mapped[list[str]] = mapped_column(ARRAY(String), nullable=True)
 
+    # Foreign keys
+    user_id: Mapped[int] = mapped_column(ForeignKey("users.id", ondelete="CASCADE"), nullable=True)
+
     # Relations
     _profile_user = relationship("User", back_populates="_user_profile")
-    _profile_metric = relationship("Metric", back_populates="_metric_profile")
+    _profile_metric = relationship("Metric", back_populates="_metric_profile", cascade="all, delete-orphan")
