@@ -42,3 +42,15 @@ class NoProfileException(HTTPException):
 
 class ProfileNotFoundMessage(Message):
     message: str = "Profile not found"
+
+
+class NoMetricException(HTTPException):
+    """
+    HTTP_404_NOT_FOUND
+    """
+
+    def __init__(self):
+        super().__init__(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="No metric found",
+        )

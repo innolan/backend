@@ -1,18 +1,53 @@
-__all__ = [
-    "GetUserInfo",
-    "UpdateUserInfo",
-]
+# __all__ = [
+#     "MetricDTO",
+#     "MetricDTOLight",
+#     "GetUserInfo",
+#     "UpdateUserInfo",
+# ]
 
 from datetime import datetime
 from typing import Optional
 from pydantic import BaseModel
 
-from src.storage.sql.models.metric import Metric
 
-
-class ProcessedMetric(BaseModel):
+class MetricDTOUpd(BaseModel):
+    id: int
     name: str
     value: float
+
+    class Config:
+        from_attributes = True
+
+
+class MetricDTO(MetricDTOUpd):
+    profile_id: int
+
+    class Config:
+        from_attributes = True
+
+
+class MetricDTOAdd(BaseModel):
+    profile_id: int
+    name: str
+    value: float
+
+    class Config:
+        from_attributes = True
+
+
+class ProfileDTO(BaseModel):
+    id: int
+    about: Optional[str] = None
+    date_of_birth: Optional[datetime] = None
+    sex: Optional[int] = None
+    religion: Optional[str] = None
+    about: Optional[str] = None
+    hobby: Optional[list[str]] = None
+    soc_media: Optional[list[str]] = None
+    metrics: Optional[list[MetricDTOUpd]] = None
+
+    class Config:
+        from_attributes = True
 
 
 class UserInfo(BaseModel):
@@ -26,7 +61,7 @@ class UserInfo(BaseModel):
     about: Optional[str] = None
     hobby: Optional[list[str]] = None
     soc_media: Optional[list[str]] = None
-    # metrics: Optional[list[ProcessedMetric] | list[None]]           
+    metrics: Optional[list[MetricDTOUpd]] = None
 
 
 class GetUserInfo(UserInfo):
