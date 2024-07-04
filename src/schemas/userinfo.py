@@ -14,6 +14,8 @@ class MetricDTOUpd(BaseModel):
     id: int
     name: str
     value: float
+    
+    __hash__ = object.__hash__
 
     class Config:
         from_attributes = True
