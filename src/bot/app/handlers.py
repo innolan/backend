@@ -1,9 +1,8 @@
-from datetime import datetime
 from aiogram import F, Router
 from aiogram.filters import Command, CommandStart
 from aiogram.types import Message, CallbackQuery
 
-import httpx
+
 from src.schemas.signin import Signin
 import src.bot.app.keyboard as kb
 

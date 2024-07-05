@@ -1,9 +1,11 @@
 from dataclasses import dataclass
+
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from src.storage.sql.__mixin__ import IdMixin
 from src.storage.sql.models import Base
+
 
 @dataclass
 class Participant(Base, IdMixin):

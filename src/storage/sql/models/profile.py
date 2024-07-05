@@ -1,8 +1,7 @@
 from dataclasses import dataclass
 from datetime import datetime
-from typing import List, Optional
 
-from sqlalchemy import Column, DateTime, Integer, String
+from sqlalchemy import DateTime, String
 from sqlalchemy.dialects.postgresql import ARRAY
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 

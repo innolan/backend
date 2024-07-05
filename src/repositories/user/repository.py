@@ -9,8 +9,10 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from src.repositories import profile_repository
 from src.schemas.userinfo import ProfileDTOUpd, UpdateUserInfo, UserDTOUpd, UserInfo
 from src.storage.sql.models import User
-from src.storage.sql.storage import AbstractSQLAlchemyStorage
 from src.exceptions import NoUserException, NoProfileException
+from src.schemas.userinfo import UpdateUserInfo, UserInfo
+from src.storage.sql.models import User, Profile, Metric
+from src.storage.sql.storage import AbstractSQLAlchemyStorage
 
 
 class SqlUserRepository:
