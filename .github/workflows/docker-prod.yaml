@@ -28,4 +28,7 @@ jobs:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
           password: ${{ secrets.PASSWORD }}
-          script: docker compose up -d
+          # `docker compose restart` wouldn't work since we need to teardown the entire setup
+          script: |
+            docker compose down
+            docker compose up -d
