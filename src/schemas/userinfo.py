@@ -7,6 +7,7 @@
 
 from datetime import datetime
 from typing import Optional
+from pydantic import BaseModel
 
 
 class MetricDTOUpd(BaseModel):
@@ -17,7 +18,6 @@ class MetricDTOUpd(BaseModel):
     __hash__ = object.__hash__
 
     class Config:
-from pydantic import BaseModel
         from_attributes = True
 
 
