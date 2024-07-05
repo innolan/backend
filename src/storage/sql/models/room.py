@@ -18,4 +18,4 @@ class Room(Base, IdMixin):
     occupacy: Mapped[int] = mapped_column()
 
     # Relations
-    _room_participant = relationship("Participant", back_populates="_participant_room")
+    _room_participant = relationship("Participant", back_populates="_participant_room", cascade="all, delete-orphan")

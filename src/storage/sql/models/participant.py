@@ -12,7 +12,8 @@ class Participant(Base, IdMixin):
     __tablename__ = "participants"
 
     # Attributes
-    room_id: Mapped[int] = mapped_column(ForeignKey("rooms.id"), nullable=True)
+    user_id: Mapped[int] = mapped_column(ForeignKey("users.id", ondelete="CASCADE"), nullable=True)
+    room_id: Mapped[int] = mapped_column(ForeignKey("rooms.id", ondelete="CASCADE"), nullable=True)
 
     # Relations
     _participant_user = relationship("User", back_populates="_user_participant")

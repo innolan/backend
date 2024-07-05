@@ -12,13 +12,9 @@ class Match(Base, IdMixin):
     __tablename__ = "matches"
 
     # Attributes
-    profileid_1: Mapped[int] = mapped_column(ForeignKey("profiles.id"), nullable=True)
-    profileid_2: Mapped[int] = mapped_column(ForeignKey("profiles.id"), nullable=True)
+    profileid_1: Mapped[int] = mapped_column(ForeignKey("profiles.id", ondelete="CASCADE"), nullable=True)
+    profileid_2: Mapped[int] = mapped_column(ForeignKey("profiles.id", ondelete="CASCADE"), nullable=True)
 
     # Relations
-    _match1_profile = relationship(
-        "Profile", backref="user1", foreign_keys=[profileid_1]
-    )
-    _match2_profile = relationship(
-        "Profile", backref="user2", foreign_keys=[profileid_2]
-    )
+    _match1_profile = relationship("Profile", backref="user1", foreign_keys=[profileid_1])
+    _match2_profile = relationship("Profile", backref="user2", foreign_keys=[profileid_2])

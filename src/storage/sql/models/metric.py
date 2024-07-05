@@ -12,7 +12,7 @@ class Metric(Base, IdMixin):
     __tablename__ = "metrics"
 
     # Attributes
-    profile_id: Mapped[int] = mapped_column(ForeignKey("profiles.id"), nullable=True)
+    profile_id: Mapped[int] = mapped_column(ForeignKey("profiles.id", ondelete="CASCADE"), nullable=True)
     name: Mapped[str] = mapped_column(String(40))
     value: Mapped[float] = mapped_column()
 
