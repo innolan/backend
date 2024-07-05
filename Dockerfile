@@ -23,5 +23,5 @@ RUN poetry install --no-dev --no-root
 # Copy source code
 COPY . .
 
-# Run the application
-CMD ["poetry", "run", "python", "-m", "src.api"]
+# Run the application with proxy
+CMD ["poetry", "run", "python", "-m", "src.api", "--root-path=/api"]

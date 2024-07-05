@@ -7,14 +7,10 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
-apiRouter = APIRouter(prefix="/api")
 for _router in routers:
-    apiRouter.include_router(_router)
+    app.include_router(_router)
 
 
 @app.get("/")
 async def root():
     return {"message": "Hello World"}
-
-
-app.include_router(apiRouter)
