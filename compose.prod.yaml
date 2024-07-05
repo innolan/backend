@@ -21,6 +21,11 @@ services:
       - ".env"
     environment:
       - PROD=true
+  
+  frontend:
+    image: ghcr.io/innolan/frontend
+    ports:
+      - "3000:3000"
     
 secrets:
   certificate.crt:
