@@ -15,6 +15,7 @@ services:
 
   backend:
     image: ghcr.io/innolan/backend
+    pull_policy: always
     ports:
       - "8000:8000"
     env_file:
@@ -24,6 +25,7 @@ services:
   
   frontend:
     image: ghcr.io/innolan/frontend
+    pull_policy: always
     ports:
       - "3000:3000"
     
