@@ -1,24 +1,30 @@
 services:
-  backend:
-    image: ghcr.io/innolan/backend 
-    env_file:
-      - ".env"
+  nginx:
+    image: nginx:latest
     ports:
-      - "80:8000"
-    environment:
-      PROD: true
-      CERTIFICATE_CA: /run/secrets/certificate_ca.crt
-      CERTIFICATE: /run/secrets/certificate.crt
-      CERTIFICATE_KEY: /run/secrets/certificate.key
+      - "1234:80"
+    volumes:
+      - ./nginx:/etc/nginx/conf.d
+    depends_on:
+      - backend
+    links:
+      - backend
     secrets:
-      - certificate_ca.crt
       - certificate.crt
       - certificate.key
 
-secrets: 
-  certificate_ca.crt: 
-    file: ./certs/certificate_ca.crt
-  certificate.crt: 
+  backend:
+    image: ghcr.io/innolan/backend
+    ports:
+      - "8000:8000"
+    env_file:
+      - ".env"
+    environment:
+      - PROD=true
+    
+secrets:
+  certificate.crt:
     file: ./certs/certificate.crt
   certificate.key:
     file: ./certs/certificate.key
+  
