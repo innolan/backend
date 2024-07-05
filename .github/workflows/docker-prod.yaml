@@ -28,13 +28,4 @@ jobs:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
           password: ${{ secrets.PASSWORD }}
-          script: |
-            # Pull the latest Docker image
-            # docker pull ghcr.io/innolan/backend:latest # Compose already does this it seems
-
-            # Stop and remove the existing container
-            docker stop root-backend-1
-            docker rm root-backend-1
-
-            # Run the new container
-            docker compose -f compose.prod.yaml up -d
+          script: docker compose up -d
