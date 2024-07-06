@@ -10,6 +10,8 @@ services:
     links:
       - backend
     secrets:
+      - cert.crt
+      - certificate_ca.crt
       - certificate.crt
       - certificate.key
 
@@ -30,6 +32,10 @@ services:
       - "3000:3000"
     
 secrets:
+  cert.crt:
+    file: ./certs/cert.crt
+  certificate_ca.crt:
+    file: ./certs/certificate_ca.crt
   certificate.crt:
     file: ./certs/certificate.crt
   certificate.key:
