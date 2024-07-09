@@ -1,4 +1,3 @@
-# https://core.telegram.org/bots/webapps#webappuser
 from typing import Optional
 
 from pydantic import BaseModel, field_validator
