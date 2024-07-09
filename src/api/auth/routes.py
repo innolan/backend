@@ -1,23 +1,20 @@
 __all__ = ["router"]
 
+import os
 from fastapi import APIRouter, Depends
-from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+from fastapi.security import OAuth2PasswordRequestForm
 import jwt
 
-from src.schemas.webapp import WebAppInitData
-from src.exceptions import NoUserException, UnauthorizedException
 from src import repositories as reps
 from src import schemas
-
-JWT_SECRET = "somesecret"
+from src.middleware.auth_guard import get_id
+from src.schemas.webapp import WebAppInitData
+from src.exceptions import NoUserException, UnauthorizedException
 
 router = APIRouter(
     prefix="/auth",
     tags=["Auth"],
 )
-
-
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/token")
 
 
 @router.post("/token")
@@ -31,7 +28,7 @@ async def token(form_data: OAuth2PasswordRequestForm = Depends()):
         if not user:
             raise UnauthorizedException()
 
-            token = jwt.encode({"sub": user.id}, JWT_SECRET)
+        token = jwt.encode({"sub": user.id}, os.getenv("JWT_TOKEN"))
         return schemas.Token(access_token=token)
     except NoUserException:
         pass  # TODO
@@ -44,14 +41,6 @@ async def register(initData: WebAppInitData):
     return userinfo
 
 
-async def verify(token: str = Depends(oauth2_scheme)) -> int:
-    try:
-        payload = jwt.decode(token, JWT_SECRET, algorithms=["HS256"])
-        return payload.get('sub')
-    except:
-        raise UnauthorizedException()
-
-
 @router.post("/post")
-async def post(id = Depends(verify)):
+async def post(id=Depends(get_id)):
     return f"OK! {id}"
