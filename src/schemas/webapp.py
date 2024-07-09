@@ -14,7 +14,7 @@ class WebAppUser(BaseModel):
     is_premium: Optional[bool] = None
     added_to_attachment_menu: Optional[bool] = None
     allows_write_to_pm: Optional[bool] = None
-    photo_url: Optional[str] = None         
+    photo_url: Optional[str] = None
 
     @field_validator("is_premium", "added_to_attachment_menu", "allows_write_to_pm")
     @classmethod
@@ -36,3 +36,22 @@ class WebAppInitData(BaseModel):
     can_send_after: Optional[int] = None
     auth_date: int
     hash: str
+    
+    model_config = {
+        "json_schema_extra": {
+            "example": [
+                {
+                    "query_id": "string",
+                    "user": {
+                        "id": 0,
+                        "first_name": "string",
+                        "last_name": "string",
+                        "username": "string",
+                        "photo_url": "string",
+                    },
+                    "auth_date": 0,
+                    "hash": "string",
+                }
+            ]
+        }
+    }
