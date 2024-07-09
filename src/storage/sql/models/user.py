@@ -18,7 +18,7 @@ class User(Base, IdMixin):
     last_name: Mapped[Optional[str]] = mapped_column(String(40))
     username: Mapped[str] = mapped_column(String(60))
     photo_url: Mapped[str] = mapped_column(String(200))
-    auth_date: Mapped[int] = mapped_column(BigInteger)
+    auth_date_hash: Mapped[str] = mapped_column(String(200))
     
 
     # Relations

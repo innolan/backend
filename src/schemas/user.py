@@ -1,24 +1,21 @@
 from typing import Optional
 from pydantic import BaseModel
-from passlib.context import CryptContext
-
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-
+from src.utils.crypt_context import pwd_context
 
 class UserDTO(BaseModel):
     id: int
     first_name: str
     last_name: Optional[str] = None
     username: Optional[str] = None
-    auth_date: int
+    auth_date_hash: str
     photo_url: Optional[str] = None
 
-    def verify_password(self, password: str):
-        return pwd_context.verify(password, self.auth_date)
+    def verify_password(self, password: int):
+        return pwd_context.verify(str(password), str(self.auth_date_hash))
 
     @classmethod
     def get_password_hash(cls, password):
         return pwd_context.hash(password)
-    
+
     class Config:
-            from_attributes = True
+        from_attributes = True
