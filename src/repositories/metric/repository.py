@@ -1,84 +1,44 @@
 __all__ = ["SqlMetricRepository", "metric_repository"]
 
 
-from typing import Self
-
 from sqlalchemy import select
-from sqlalchemy.ext.asyncio import AsyncSession
-from src.storage.sql.storage import AbstractSQLAlchemyStorage
+from src.repositories.baserepo import SqlBaseRepository
 
-from src.schemas.userinfo import (
-    MetricDTO,
-    MetricDTOAdd,
-    MetricDTOUpd,
-)
+from src import schemas
+from src import repositories as reps
 from src.exceptions import NoMetricException, NoProfileException
 from src.storage.sql.models import Metric
-import src.repositories as reps
 
 
-class SqlMetricRepository:
-    storage: AbstractSQLAlchemyStorage
+class SqlMetricRepository(SqlBaseRepository):
 
-    def update_storage(self, storage: AbstractSQLAlchemyStorage) -> Self:
-        self.storage = storage
-        return self
-
-    def _create_session(self) -> AsyncSession:
-        return self.storage.create_session()
-
-    async def get(self, id: int) -> MetricDTO | None:
+    async def get(self, id: int):
         async with self._create_session() as session:
-            # Get metric
             metric = await session.get(Metric, id)
             if not metric:
                 raise NoMetricException()
 
-            return MetricDTO.model_validate(metric)
+            return schemas.MetricDTO.model_validate(metric)
 
-    async def get_by_profile_id(self, profile_id: int) -> list[MetricDTOUpd] | None:
+    async def create(self, create: schemas.MetricDTO):
         async with self._create_session() as session:
-            # Will throw if no profile found
-            if not (await reps.profile_repository.is_profile_exist(profile_id)):
-                 raise NoProfileException()
-
-            # Form query
-            query = select(Metric).where(Metric.profile_id == profile_id)
-            # Get scalars
-            scalars = (await session.execute(query)).scalars().all()
-            # Validate DTOs
-            metrics = [MetricDTOUpd.model_validate(s) for s in scalars]
-            return metrics
-
-    async def create(self, create: MetricDTOAdd) -> MetricDTO | None:
-        """Add metric
-
-        Args:
-            create (MetricDTOAdd): Metric "ADD" DTO
-
-        Returns:
-            MetricDTO | None: Newly created metric
-        """
-        async with self._create_session() as session:
-            metric = Metric(**create.model_dump())
+            metric = Metric(**create.model_dump(exclude={"id"}))
             session.add(metric)
             await session.commit()
 
             return await self.get(metric.id)
 
-    async def update(self, id: int, update: MetricDTOUpd) -> MetricDTO | None:
-        """Update metric
+    async def get_by_profile_id(self, profile_id: int):
+        async with self._create_session() as session:
+            if not (await reps.profile_repository.is_profile_exist(profile_id)):
+                raise NoProfileException()
 
-        Args:
-            id (int):  ID of metric
-            update (MetricDTO): Update DTO
+            query = select(Metric).where(Metric.profile_id == profile_id)
+            scalars = (await session.execute(query)).scalars().all()
+            metrics = [schemas.MetricDTO.model_validate(s) for s in scalars]
+            return metrics
 
-        Returns:
-            MetricDTO | None: Fresh metric
-
-        Raises:
-            NoMetricException: Raised if no metric was found
-        """
+    async def update(self, update: schemas.MetricDTO):
         async with self._create_session() as session:
             metric = await session.get(Metric, id)
             if not metric:
@@ -87,6 +47,9 @@ class SqlMetricRepository:
             # Update relevant values
             metric.name = update.name or metric.name
             metric.value = update.value or metric.value
+
+            session.add(metric)
+            await session.commit()
 
             return await self.get(id)
 
