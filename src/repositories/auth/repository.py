@@ -1,54 +1,32 @@
 __all__ = ["SqlAuthRepository", "auth_repository"]
 
-from typing import Self
 
-from sqlalchemy import select
-from sqlalchemy.ext.asyncio import AsyncSession
-
-from src.schemas.signin import Signin
-from src.storage.sql.models import User, Profile
-from src.storage.sql.storage import AbstractSQLAlchemyStorage
+import src.repositories as reps
+from src import schemas
+from src.repositories.baserepo import SqlBaseRepository
+from src.exceptions import NoUserException, UnauthorizedException
 
 
-class SqlAuthRepository:
-    storage: AbstractSQLAlchemyStorage
+class SqlAuthRepository(SqlBaseRepository):
+    async def authenticate(self, username: int, password: int):
+        user = await reps.user_repository.get(username)
 
-    def update_storage(self, storage: AbstractSQLAlchemyStorage) -> Self:
-        self.storage = storage
-        return self
+        if not user:
+            raise NoUserException()
 
-    def _create_session(self) -> AsyncSession:
-        return self.storage.create_session()
+        if not user.verify_password(password):
+            raise UnauthorizedException()
 
-    async def signin(self, signin: Signin) -> tuple[User, Profile]:
-        async with self._create_session() as session:
-            # Look for a user by TG ID
-            query = select(User).where(User.tg_id == signin.id)
-            user_obj = await session.scalar(query)
+        return user
 
-            # If the user exists, return
-            if user_obj:
-                return
+    async def register(self, initData: schemas.WebAppInitData):
+        if await reps.user_repository.get(initData.user.id):
+            # TODO Raise "go to token"
+            raise ValueError()
 
-            # Otherwise
-            profile = Profile()
-            session.add(profile)
-            await session.flush()  # "Soft" save and generate ID
+        user = await reps.userinfo_repository.initialize(initData)
 
-            # Create user
-            user = User(
-                tg_id=signin.id,
-                first_name=signin.first_name,
-                last_name=signin.last_name,
-                username=signin.username,
-                photo_url=signin.photo_url,
-                auth_date=signin.auth_date,
-                profile_id=profile.id,
-            )
-            session.add(user)
-            await session.commit()
-
-            return (user, profile)
+        return user
 
 
 auth_repository: SqlAuthRepository = SqlAuthRepository()

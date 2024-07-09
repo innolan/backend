@@ -2,8 +2,6 @@ from aiogram import F, Router
 from aiogram.filters import Command, CommandStart
 from aiogram.types import Message, CallbackQuery
 
-
-from src.schemas.signin import Signin
 import src.bot.app.keyboard as kb
 
 router = Router()

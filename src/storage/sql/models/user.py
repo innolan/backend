@@ -14,12 +14,12 @@ class User(Base, IdMixin):
     __tablename__ = "users"
 
     # Attributes
-    tg_id = mapped_column(BigInteger)
     first_name: Mapped[str] = mapped_column(String(40))
     last_name: Mapped[Optional[str]] = mapped_column(String(40))
     username: Mapped[str] = mapped_column(String(60))
     photo_url: Mapped[str] = mapped_column(String(200))
-    auth_date: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+    auth_date_hash: Mapped[str] = mapped_column(String(200))
+    
 
     # Relations
     _user_profile = relationship("Profile", back_populates="_profile_user", cascade="all, delete-orphan")

@@ -1,78 +1,99 @@
 __all__ = ["SqlProfileRepository", "profile_repository"]
 
 
-from typing import Self
-
+from asyncio import gather
 from sqlalchemy import delete, insert, select
-from sqlalchemy.ext.asyncio import AsyncSession
 
-from src.schemas.userinfo import MetricDTO, ProfileDTO, ProfileDTOUpd
+from src import schemas
+from src.repositories.baserepo import SqlBaseRepository
 from src.storage.sql.models import Profile, Metric
-from src.storage.sql.storage import AbstractSQLAlchemyStorage
-from src.exceptions import NoProfileException
+from src.exceptions import EntityExistsException, NoProfileException
 from src.utils.compare_lists import compare_lists
 import src.repositories as reps
 
-class SqlProfileRepository:
-    storage: AbstractSQLAlchemyStorage
 
-    def update_storage(self, storage: AbstractSQLAlchemyStorage) -> Self:
-        self.storage = storage
-        return self
-
-    def _create_session(self) -> AsyncSession:
-        return self.storage.create_session()
-
-    async def get(self, profile_id: int) -> ProfileDTO | None:
+class SqlProfileRepository(SqlBaseRepository):
+    async def add(self, create: schemas.ProfileDTO):
         async with self._create_session() as session:
-            # Get profile
-            profile = await session.get(Profile, profile_id)
-            if not profile:
-                raise NoProfileException()
-            # Get metrics
-            metrics = await reps.metric_repository.get_by_profile_id(profile_id)
-            # Validate profile and add metrics            
-            profile_dto = ProfileDTOUpd.model_validate(profile)
-            profile_dto.metrics = metrics
+            raw_profile = Profile(**create.model_dump(exclude={"metrics"}))
+            session.add(raw_profile)
+            await session.commit()
+
+        
+            metrics: list[schemas.MetricDTO] = None
+            if create.metrics is not None:
+                # Write all metrics
+                metrics = await gather(
+                    *[
+                        reps.metric_repository.create(
+                            schemas.MetricDTO(
+                                name=m.name,
+                                value=m.value,
+                                profile_id=raw_profile.id,
+                            )
+                        )
+                        for m in create.metrics
+                    ]
+                )
+                # Strip metrics of profile_id
+                metrics = list(
+                    map(
+                        lambda m: schemas.MetricDTO(**m.model_dump(exclude={"profile_id"})),
+                        metrics,
+                    )
+                )
+                
+
+            await session.commit()
+            profile_dto = schemas.ProfileDTO.model_validate(raw_profile)
             
+            profile_dto.metrics = metrics
             return profile_dto
+
+    async def get(self, id: int):
+        async with self._create_session() as session:
+            raw_profile = await session.get(Profile, id)
+            if not raw_profile:
+                return None
+            profile = schemas.ProfileDTO.model_validate(raw_profile)
+
+            metrics = await reps.metric_repository.get_by_profile_id(id)
+            profile.metrics = metrics
+
+            return profile
 
     async def is_profile_exist(self, profile_id):
         async with self._create_session() as session:
-            # Get profile
             profile = await session.get(Profile, profile_id)
             return True if profile else False
 
-    async def update(self, id: int, update: ProfileDTO) -> ProfileDTO | None:
+    async def update(self, update: schemas.ProfileDTO):
         async with self._create_session() as session:
-            # Get profile
-            profile = await self.get(id)
-
-            # old_metrics = reps.metric_repository.``
-            profile.date_of_birth = update.date_of_birth or profile.date_of_birth
-            profile.sex = update.sex or profile.sex
-            profile.religion = update.religion or profile.religion
-            profile.hobby = update.hobby or profile.hobby
-            profile.soc_media = update.soc_media or profile.soc_media
-
-            # Special case for metrics
+            profile = await self.get(update.id)
 
             # Compare metrics
-            removed, added, _ = compare_lists(profile.metrics, profile.metrics)
+            removed, added, _ = compare_lists(profile.metrics, update.metrics)
 
             # Delete irrelevant ones
-            session.execute(
-                delete(Metric).where(Metric.id.in_([m.id for m in removed]))
-            )
+            await gather([reps.metric_repository.delete(m.id) for m in removed])
+
             # Add relevant ones
-            session.execute(
-                insert(Metric),
-                [MetricDTO.model_construct(m.model_dump()) for m in added],
+            await gather(
+                [
+                    reps.metric_repository.create(
+                        schemas.MetricDTO(
+                            name=m.name,
+                            value=m.value,
+                            profile_id=profile.id,
+                        )
+                    )
+                    for m in added
+                ]
             )
 
             await session.commit()
 
-            return await self.get(id)
+            return await self.get(update.id)
 
 
 profile_repository: SqlProfileRepository = SqlProfileRepository()

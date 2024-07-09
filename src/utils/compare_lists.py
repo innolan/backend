@@ -4,14 +4,14 @@ from typing import List, Tuple, TypeVar
 
 T = TypeVar('T')
 
-def compare_lists(list1: List[T], list2: List[T]) -> Tuple[List[T], List[T], List[T]]:
+def compare_lists(old: List[T], new: List[T]) -> Tuple[List[T], List[T], List[T]]:
     removed = []
     added = []
     unchanged = []
 
-    obj_set2 = set(list2)
+    obj_set2 = set(new)
 
-    for obj1 in list1:
+    for obj1 in old:
         if obj1 not in obj_set2:
             removed.append(obj1)
         else:

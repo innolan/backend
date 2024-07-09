@@ -1,22 +1,40 @@
 __all__ = ["router"]
 
-from fastapi import APIRouter, Depends, HTTPException
+import os
+from fastapi import APIRouter, Depends
+from fastapi.security import OAuth2PasswordRequestForm
+import jwt
 
-from src.schemas.signin import Signin
-from src.repositories.auth.repository import auth_repository
-from src.exceptions import Message, UserHaveAlreadySignedInMessage
+from src import repositories as reps
+from src import schemas
+from src.schemas.webapp import WebAppInitData
+from src.exceptions import NoUserException, UnauthorizedException
 
-router = APIRouter(prefix="/auth", tags=["Auth"])
-
-
-@router.get(
-    "/signin",
-    responses={
-        409: {"model": UserHaveAlreadySignedInMessage},
-    },
+router = APIRouter(
+    prefix="/auth",
+    tags=["Auth"],
 )
-async def signin(signin: Signin = Depends()):  # TODO Add return type
+
+
+@router.post("/token")
+async def token(form_data: OAuth2PasswordRequestForm = Depends()):
     try:
-        return await auth_repository.signin(signin)
-    except HTTPException as e:
-        return Message(e.detail)
+        user = await reps.auth_repository.authenticate(
+            int(form_data.username),
+            int(form_data.password),
+        )
+
+        if not user:
+            raise UnauthorizedException()
+
+        token = jwt.encode({"sub": user.id}, os.getenv("JWT_TOKEN"))
+        return schemas.Token(access_token=token)
+    except NoUserException:
+        pass  # TODO
+
+
+@router.post("/register")
+async def register(initData: WebAppInitData):
+    userinfo = await reps.auth_repository.register(initData)
+
+    return userinfo

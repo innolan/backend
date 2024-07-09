@@ -42,6 +42,19 @@ class NoProfileException(HTTPException):
 
 class ProfileNotFoundMessage(Message):
     message: str = "Profile not found"
+    
+class EntityExistsException(HTTPException):
+    """
+    HTTP_409_CONFLICT
+    """
+
+    def __init__(self):
+        super().__init__(
+            status_code=status.HTTP_409_CONFLICT,
+            detail="Entity exists",
+        )
+
+
 
 
 class NoMetricException(HTTPException):
@@ -53,4 +66,17 @@ class NoMetricException(HTTPException):
         super().__init__(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="No metric found",
+        )
+
+
+class UnauthorizedException(HTTPException):
+    """
+    HTTP_401_UNAUTHORIZED
+    """
+
+    def __init__(self):
+        super().__init__(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Incorrect username or password",
+            headers={"WWW-Authenticate": "Bearer"},
         )
