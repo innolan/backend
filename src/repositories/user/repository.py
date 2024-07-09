@@ -16,7 +16,7 @@ class SqlUserRepository(SqlBaseRepository):
 
     async def add(self, user: schemas.UserDTO):
         async with self._create_session() as session:
-            raw_user = User(**user.model_dump())
+            raw_user = User(**user.model_dump(exclude={"profile_id"}))
             session.add(raw_user)
             await session.commit()
             return user

@@ -12,8 +12,6 @@ class UserDTO(BaseModel):
     username: Optional[str] = None
     auth_date: int
     photo_url: Optional[str] = None
-    
-    profile_id: Optional[int] = None
 
     def verify_password(self, password: str):
         return pwd_context.verify(password, self.auth_date)

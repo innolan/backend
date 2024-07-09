@@ -19,6 +19,8 @@ class SqlProfileRepository(SqlBaseRepository):
             session.add(raw_profile)
             await session.commit()
 
+        
+            metrics: list[schemas.MetricDTO] = None
             if create.metrics is not None:
                 # Write all metrics
                 metrics = await gather(
@@ -33,17 +35,17 @@ class SqlProfileRepository(SqlBaseRepository):
                         for m in create.metrics
                     ]
                 )
+                # Strip metrics of profile_id
+                metrics = list(
+                    map(
+                        lambda m: schemas.MetricDTO(**m.model_dump(exclude={"profile_id"})),
+                        metrics,
+                    )
+                )
+                
 
             await session.commit()
             profile_dto = schemas.ProfileDTO.model_validate(raw_profile)
-            
-            # Strip metrics of profile_id
-            metrics = list(
-                map(
-                    lambda m: schemas.MetricDTO(**m.model_dump(exclude={"profile_id"})),
-                    metrics,
-                )
-            )
             
             profile_dto.metrics = metrics
             return profile_dto
