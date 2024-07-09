@@ -11,12 +11,11 @@ from src.storage.sql.models import Metric
 
 
 class SqlMetricRepository(SqlBaseRepository):
-
     async def get(self, id: int):
         async with self._create_session() as session:
             metric = await session.get(Metric, id)
             if not metric:
-                raise NoMetricException()
+                return None
 
             return schemas.MetricDTO.model_validate(metric)
 
@@ -27,6 +26,14 @@ class SqlMetricRepository(SqlBaseRepository):
             await session.commit()
 
             return await self.get(metric.id)
+
+    async def delete(self, id):
+        async with self._create_session() as session:
+            metric = await session.get(Metric, id)
+            session.delete(metric)
+            if not metric:
+                raise NoMetricException()
+            await session.commit()
 
     async def get_by_profile_id(self, profile_id: int):
         async with self._create_session() as session:
