@@ -54,3 +54,16 @@ class NoMetricException(HTTPException):
             status_code=status.HTTP_404_NOT_FOUND,
             detail="No metric found",
         )
+
+
+class UnauthorizedException(HTTPException):
+    """
+    HTTP_401_UNAUTHORIZED
+    """
+
+    def __init__(self):
+        super().__init__(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Incorrect username or password",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
