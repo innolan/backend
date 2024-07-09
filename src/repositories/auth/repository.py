@@ -2,7 +2,7 @@ __all__ = ["SqlAuthRepository", "auth_repository"]
 
 
 import src.repositories as reps
-from src.schemas.webapp import WebAppInitData
+from src import schemas
 from src.repositories.baserepo import SqlBaseRepository
 from src.exceptions import NoUserException, UnauthorizedException
 
@@ -19,7 +19,7 @@ class SqlAuthRepository(SqlBaseRepository):
 
         return user
 
-    async def register(self, initData: WebAppInitData):
+    async def register(self, initData: schemas.WebAppInitData):
         if await reps.user_repository.get(initData.user.id):
             # TODO Raise "go to token"
             raise ValueError()

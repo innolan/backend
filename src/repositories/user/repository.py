@@ -12,6 +12,7 @@ class SqlUserRepository(SqlBaseRepository):
             if not raw_user:
                 return None
             user = schemas.UserDTO.model_validate(raw_user)
+            del user.auth_date_hash
             return user
 
     async def add(self, user: schemas.UserDTO):
