@@ -1,11 +1,12 @@
+from typing import Optional
 from pydantic import BaseModel
 
 
 class MetricDTO(BaseModel):
-    id: int
+    id: Optional[int] = None
     name: str
     value: float
-    profile_id: int
+    profile_id: Optional[int] = None
 
     # __hash__ = object.__hash__
 

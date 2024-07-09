@@ -43,6 +43,13 @@ class SqlMetricRepository(SqlBaseRepository):
             query = select(Metric).where(Metric.profile_id == profile_id)
             scalars = (await session.execute(query)).scalars().all()
             metrics = [schemas.MetricDTO.model_validate(s) for s in scalars]
+            # Strip metrics of profile_id
+            metrics = list(
+                map(
+                    lambda m: schemas.MetricDTO(**m.model_dump(exclude={"profile_id"})),
+                    metrics,
+                )
+            )
             return metrics
 
     async def update(self, update: schemas.MetricDTO):
