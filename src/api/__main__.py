@@ -15,7 +15,6 @@ uvicorn.main.main(
         "--use-colors",
         "--proxy-headers",
         "--forwarded-allow-ips=*",
-        "--host=0.0.0.0",
         *args,
     ]
 )

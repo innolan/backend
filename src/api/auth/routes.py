@@ -7,7 +7,6 @@ import jwt
 
 from src import repositories as reps
 from src import schemas
-from src.middleware.auth_guard import get_id
 from src.schemas.webapp import WebAppInitData
 from src.exceptions import NoUserException, UnauthorizedException
 
@@ -39,8 +38,3 @@ async def register(initData: WebAppInitData):
     userinfo = await reps.auth_repository.register(initData)
 
     return userinfo
-
-
-@router.post("/post")
-async def post(id=Depends(get_id)):
-    return f"OK! {id}"
