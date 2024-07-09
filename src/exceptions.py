@@ -42,6 +42,19 @@ class NoProfileException(HTTPException):
 
 class ProfileNotFoundMessage(Message):
     message: str = "Profile not found"
+    
+class EntityExistsException(HTTPException):
+    """
+    HTTP_409_CONFLICT
+    """
+
+    def __init__(self):
+        super().__init__(
+            status_code=status.HTTP_409_CONFLICT,
+            detail="Entity exists",
+        )
+
+
 
 
 class NoMetricException(HTTPException):
