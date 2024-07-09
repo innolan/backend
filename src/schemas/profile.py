@@ -2,7 +2,7 @@ from pydantic import BaseModel
 from datetime import datetime
 from typing import Optional
 
-from src.schemas.metric import MetricDTOUpd
+from src.schemas import MetricDTO
 
 
 class ProfileDTO(BaseModel):
@@ -13,7 +13,7 @@ class ProfileDTO(BaseModel):
     religion: Optional[str] = None
     hobby: Optional[list[str]] = None
     soc_media: Optional[list[str]] = None
-    metrics: Optional[list[MetricDTOUpd]]
+    metrics: Optional[list[MetricDTO]]
 
     class Config:
         from_attributes = True
