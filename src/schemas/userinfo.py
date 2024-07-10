@@ -5,8 +5,8 @@ from src import schemas
 
 
 class UserInfoDTO(BaseModel):
-    id: int
-    first_name: str
+    id: Optional[int] = None
+    first_name: Optional[str] = None
     last_name: Optional[str] = None
     username: Optional[str] = None
     photo_url: Optional[str] = None
