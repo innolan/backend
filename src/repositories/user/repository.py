@@ -19,7 +19,7 @@ class SqlUserRepository(SqlBaseRepository):
                 del user.auth_date_hash
             return user
 
-    @deprecated("No business logic requires this level of fine-tuning for user creation")
+    @deprecated("User creation is delegated to 'userinfo_repository.initialize()'")
     async def add(self, user: schemas.UserDTO):
         raise NotImplementedException()
 
