@@ -15,9 +15,9 @@ class User(Base, IdMixin):
 
     # Attributes
     first_name: Mapped[str] = mapped_column(String(40))
-    last_name: Mapped[Optional[str]] = mapped_column(String(40))
-    username: Mapped[str] = mapped_column(String(60))
-    photo_url: Mapped[str] = mapped_column(String(200))
+    last_name: Mapped[Optional[str]] = mapped_column(String(40), nullable=True)
+    username: Mapped[str] = mapped_column(String(60), nullable=True)   
+    photo_url: Mapped[str] = mapped_column(String(200), nullable=True)
     auth_date_hash: Mapped[str] = mapped_column(String(200))
     
 
