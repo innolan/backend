@@ -18,6 +18,8 @@ asyncpg = "^0.29.0"
 aiogram = "3.8.0"
 pyjwt = "^2.8.0"
 passlib = "^1.7.4"
+deprecation = "^2.1.0"
+deprecated = "^1.2.14"
 
 
 [build-system]
