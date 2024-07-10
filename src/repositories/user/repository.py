@@ -6,13 +6,14 @@ from src.storage.sql.models import User
 
 
 class SqlUserRepository(SqlBaseRepository):
-    async def get(self, id: int):
+    async def get(self, id: int, remove_hash = True):
         async with self._create_session() as session:
             raw_user = await session.get(User, id)
             if not raw_user:
                 return None
             user = schemas.UserDTO.model_validate(raw_user)
-            del user.auth_date_hash
+            if remove_hash:
+                del user.auth_date_hash
             return user
 
     async def add(self, user: schemas.UserDTO):

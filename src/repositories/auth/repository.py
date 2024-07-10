@@ -9,7 +9,7 @@ from src.exceptions import NoUserException, UnauthorizedException
 
 class SqlAuthRepository(SqlBaseRepository):
     async def authenticate(self, username: int, password: int):
-        user = await reps.user_repository.get(username)
+        user = await reps.user_repository.get(username, False)
 
         if not user:
             raise NoUserException()
