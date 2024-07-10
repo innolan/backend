@@ -36,22 +36,20 @@ class WebAppInitData(BaseModel):
     can_send_after: Optional[int] = None
     auth_date: int
     hash: str
-    
+
     model_config = {
         "json_schema_extra": {
-            "example": [
-                {
-                    "query_id": "string",
-                    "user": {
-                        "id": 0,
-                        "first_name": "string",
-                        "last_name": "string",
-                        "username": "string",
-                        "photo_url": "string",
-                    },
-                    "auth_date": 0,
-                    "hash": "string",
-                }
-            ]
+            "example": {
+                "query_id": "string",
+                "user": {
+                    "id": 0,
+                    "first_name": "string",
+                    "last_name": "string",
+                    "username": "string",
+                    "photo_url": "string",
+                },
+                "auth_date": 0,
+                "hash": "string",
+            }
         }
     }
