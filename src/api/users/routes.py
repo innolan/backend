@@ -6,11 +6,12 @@ from src.middleware.auth_guard import get_id
 from src.repositories.user.repository import user_repository
 from src.exceptions import Message
 from src import repositories as reps
+from src import schemas
 
 router = APIRouter(prefix="/users", tags=["Users"])
 
 
-@router.get("/me")
+@router.get("/me", response_model=schemas.UserInfoDTO)
 async def getUserInfo(id: str = Depends(get_id)):
     return await reps.user_repository.get(id)
 

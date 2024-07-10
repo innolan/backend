@@ -16,21 +16,18 @@ router = APIRouter(
 )
 
 
-@router.post("/token")
+@router.post("/token", response_model=schemas.Token)
 async def token(form_data: OAuth2PasswordRequestForm = Depends()):
-    try:
-        user = await reps.auth_repository.authenticate(
-            int(form_data.username),
-            int(form_data.password),
-        )
+    user = await reps.auth_repository.authenticate(
+        int(form_data.username),
+        int(form_data.password),
+    )
 
-        if not user:
-            raise UnauthorizedException()
+    if not user:
+        raise UnauthorizedException()
 
-        token = jwt.encode({"sub": user.id}, os.getenv("JWT_TOKEN"))
-        return schemas.Token(access_token=token)
-    except NoUserException:
-        pass  # TODO
+    token = jwt.encode({"sub": user.id}, os.getenv("JWT_TOKEN"))
+    return schemas.Token(access_token=token)
 
 
 @router.post("/register", response_model=schemas.UserInfoDTO)
