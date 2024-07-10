@@ -5,9 +5,8 @@ from fastapi import APIRouter, Depends
 from fastapi.security import OAuth2PasswordRequestForm
 import jwt
 
-from src import repositories as reps
 from src import schemas
-from src.schemas.webapp import WebAppInitData
+from src import repositories as reps
 from src.exceptions import NoUserException, UnauthorizedException
 
 router = APIRouter(
@@ -31,7 +30,6 @@ async def token(form_data: OAuth2PasswordRequestForm = Depends()):
 
 
 @router.post("/register", response_model=schemas.UserInfoDTO)
-async def register(initData: WebAppInitData):
-    userinfo = await reps.auth_repository.register(initData)
+async def register(initData: schemas.WebAppInitData):
+    return await reps.auth_repository.register(initData)
 
-    return userinfo
