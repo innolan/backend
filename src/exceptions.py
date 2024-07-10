@@ -80,3 +80,15 @@ class UnauthorizedException(HTTPException):
             detail="Incorrect username or password",
             headers={"WWW-Authenticate": "Bearer"},
         )
+
+
+class EntityExistsException(HTTPException):
+    """
+    HTTP_409_CONFLICT
+    """
+
+    def __init__(self):
+        super().__init__(
+            status_code=status.HTTP_409_CONFLICT,
+            detail="Entity exists",
+        )
