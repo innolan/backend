@@ -24,5 +24,5 @@ class Profile(Base):
     soc_media: Mapped[list[str]] = mapped_column(ARRAY(String), nullable=True)
     
     # Relations
-    _profile_user = relationship("User", back_populates="_user_profile")
-    _profile_metric = relationship("Metric", back_populates="_metric_profile", cascade="all, delete-orphan")
+    user = relationship("User", back_populates="profile")
+    _profile_metric = relationship("Metric", cascade="all, delete-orphan")

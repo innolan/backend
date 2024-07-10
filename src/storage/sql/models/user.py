@@ -16,11 +16,12 @@ class User(Base, IdMixin):
     # Attributes
     first_name: Mapped[str] = mapped_column(String(40))
     last_name: Mapped[Optional[str]] = mapped_column(String(40), nullable=True)
-    username: Mapped[str] = mapped_column(String(60), nullable=True)   
+    username: Mapped[str] = mapped_column(String(60), nullable=True)
     photo_url: Mapped[str] = mapped_column(String(200), nullable=True)
     auth_date_hash: Mapped[str] = mapped_column(String(200))
-    
 
     # Relations
-    _user_profile = relationship("Profile", back_populates="_profile_user", cascade="all, delete-orphan")
-    _user_participant = relationship("Participant", back_populates="_participant_user", cascade="all, delete-orphan")
+    profile = relationship("Profile", back_populates="user")
+    _user_participant = relationship(
+        "Participant", back_populates="_participant_user", cascade="all, delete-orphan"
+    )
