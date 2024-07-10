@@ -26,7 +26,7 @@ class SqlUserInfoRepository(SqlBaseRepository):
 
             # 2. Create profile
             profile_dto = schemas.ProfileDTO(
-                **initData.user.model_dump(exclude={"metrics"})
+                id=initData.user.id,    
             )
             profile = await reps.profile_repository.add(profile_dto)
             await session.commit()
