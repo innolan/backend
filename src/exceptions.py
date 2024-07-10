@@ -42,7 +42,8 @@ class NoProfileException(HTTPException):
 
 class ProfileNotFoundMessage(Message):
     message: str = "Profile not found"
-    
+
+
 class EntityExistsException(HTTPException):
     """
     HTTP_409_CONFLICT
@@ -53,8 +54,6 @@ class EntityExistsException(HTTPException):
             status_code=status.HTTP_409_CONFLICT,
             detail="Entity exists",
         )
-
-
 
 
 class NoMetricException(HTTPException):
@@ -82,6 +81,9 @@ class UnauthorizedException(HTTPException):
         )
 
 
+### PRUNE ABOVE
+
+
 class EntityExistsException(HTTPException):
     """
     HTTP_409_CONFLICT
@@ -91,4 +93,26 @@ class EntityExistsException(HTTPException):
         super().__init__(
             status_code=status.HTTP_409_CONFLICT,
             detail="Entity exists",
+        )
+
+
+class EntityNotFoundException(HTTPException):
+    """
+    HTTP_404_NOT_FOUND
+    """
+
+    def __init__(self, detail: str):
+        super().__init__(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"No entity found: {detail}",
+        )
+
+class NotImplementedException(HTTPException):
+    """
+    HTTP_501_NOT_IMPLEMENTED
+    """
+    def __init__(self):
+        super().__init__(
+            status_code=status.HTTP_501_NOT_IMPLEMENTED,
+            detail="Not implemented",
         )
