@@ -33,7 +33,7 @@ async def token(form_data: OAuth2PasswordRequestForm = Depends()):
         pass  # TODO
 
 
-@router.post("/register")
+@router.post("/register", response_model=schemas.UserInfoDTO)
 async def register(initData: WebAppInitData):
     userinfo = await reps.auth_repository.register(initData)
 
