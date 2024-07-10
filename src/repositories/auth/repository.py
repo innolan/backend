@@ -24,9 +24,9 @@ class SqlAuthRepository(SqlBaseRepository):
             # TODO Raise "go to token"
             raise ValueError()
 
-        user = await reps.userinfo_repository.initialize(initData)
+        userinfo = await reps.userinfo_repository.initialize(initData)
 
-        return user
+        return userinfo
 
 
 auth_repository: SqlAuthRepository = SqlAuthRepository()
