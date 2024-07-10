@@ -36,14 +36,17 @@ class SqlUserInfoRepository(SqlBaseRepository):
             return schemas.UserInfoDTO(**userinfo)
 
     async def get(self, id: int):
-        async with self._create_session() as session:
-            user = await reps.user_repository.get(id)
-            profile = await reps.profile_repository.get(id)
-            await session.commit()
+        user = await reps.user_repository.get(id)
+        profile = await reps.profile_repository.get(id)
 
-            # Create a UserInfo object
-            userinfo = {**user.model_dump(), **profile.model_dump(exclude={"id"})}
-            return schemas.UserInfoDTO(**userinfo)
+        # Create a UserInfo object
+        userinfo = {**user.model_dump(), **profile.model_dump(exclude={"id"})}
+        return schemas.UserInfoDTO(**userinfo)
+
+    async def delete(self, id: int):
+        await reps.profile_repository.delete(id)
+        await reps.user_repository.delete(id)
+        
 
 
 userinfo_repository: SqlUserInfoRepository = SqlUserInfoRepository()

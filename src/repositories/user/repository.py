@@ -1,5 +1,6 @@
 __all__ = ["SqlUserRepository", "user_repository"]
 
+from sqlalchemy import delete
 from src.repositories.baserepo import SqlBaseRepository
 from src import schemas
 from src.storage.sql.models import User
@@ -22,6 +23,11 @@ class SqlUserRepository(SqlBaseRepository):
             session.add(raw_user)
             await session.commit()
             return user
+        
+    async def delete(self, id: int):
+        async with self._create_session() as session:
+            query = delete(User).where(User.id == id)
+            return await session.scalar(query)
 
 
 user_repository: SqlUserRepository = SqlUserRepository()
