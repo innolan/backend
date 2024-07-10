@@ -14,8 +14,6 @@ class ProfileDTO(BaseModel):
     hobby: Optional[list[str]] = None
     soc_media: Optional[list[str]] = None
     metrics: Optional[list[MetricDTO]] = None
-    
-    user_id: Optional[int] = None
 
     class Config:
         from_attributes = True
