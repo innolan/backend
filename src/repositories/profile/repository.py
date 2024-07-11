@@ -35,11 +35,10 @@ class SqlProfileRepository(SqlBaseRepository):
             profile = await session.get(Profile, profile_id)
             return True if profile else False
 
-    async def update(self, new_profile: schemas.ProfileDTO):
+    async def update(self, id: int, new_profile: schemas.ProfileDTO):
         async with self._create_session() as session:
-            profile = await self.get(new_profile.id)
+            profile = await self.get(id)
 
-            # 1. Update regular fields
             profile.about = new_profile.about or profile.about
             profile.date_of_birth = new_profile.date_of_birth or profile.date_of_birth
             profile.sex = new_profile.sex or profile.sex
@@ -52,25 +51,6 @@ class SqlProfileRepository(SqlBaseRepository):
                 .where(Profile.id == profile.id)
                 .values(profile.model_dump(exclude={"id", "metric"}))
             )
-
-            # 2. Update metrics
-            if new_profile.metrics is not None:
-                # Compare metrics
-                removed, added, _ = compare_lists(profile.metrics, new_profile.metrics)
-
-                # Delete irrelevant ones
-                session.execute(
-                    delete(Metric).where(Metric.id.in_(map(lambda m: m.id, removed)))
-                )
-
-                # Add relevant ones
-                for m in added:
-                    metric = Metric(
-                        name=m.name,
-                        value=m.value,
-                        profile_id=profile.id,
-                    )
-                    session.add(metric)
 
             await session.commit()
 

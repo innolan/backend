@@ -13,7 +13,6 @@ class ProfileDTO(BaseModel):
     religion: Optional[str] = None
     hobby: Optional[list[str]] = None
     soc_media: Optional[list[str]] = None
-    metrics: Optional[list[MetricDTO]] = None
 
     class Config:
         from_attributes = True

@@ -1,12 +1,12 @@
 __all__ = ["SqlMetricRepository", "metric_repository"]
 
 
-from sqlalchemy import select
+from sqlalchemy import select, update
 from src.repositories.baserepo import SqlBaseRepository
 
 from src import schemas
 from src import repositories as reps
-from src.exceptions import NoMetricException, NoProfileException
+from src.exceptions import NoMetricException, NotImplementedException
 from src.storage.sql.models import Metric
 
 
@@ -19,9 +19,14 @@ class SqlMetricRepository(SqlBaseRepository):
 
             return schemas.MetricDTO.model_validate(metric)
 
-    async def create(self, create: schemas.MetricDTO):
+    async def create(self, profile_id: int, create: schemas.MetricDTO):
         async with self._create_session() as session:
-            metric = Metric(**create.model_dump(exclude={"id"}))
+            metric = Metric(
+                **{
+                    **create.model_dump(include={"name", "value"}),
+                    **{"profile_id": profile_id},
+                }
+            )
             session.add(metric)
             await session.commit()
 
@@ -36,33 +41,39 @@ class SqlMetricRepository(SqlBaseRepository):
             await session.commit()
 
     async def get_by_profile_id(self, profile_id: int):
-        async with self._create_session() as session:
-            if not (await reps.profile_repository.is_profile_exist(profile_id)):
-                raise NoProfileException()
+        # TODO: Reconsider method
+        raise NotImplementedException()
+        # async with self._create_session() as session:
+        #     if not (await reps.profile_repository.is_profile_exist(profile_id)):
+        #         raise NoProfileException()
 
-            query = select(Metric).where(Metric.profile_id == profile_id)
-            scalars = (await session.execute(query)).scalars().all()
-            metrics = [schemas.MetricDTO.model_validate(s) for s in scalars]
-            # Strip metrics of profile_id
-            metrics = list(
-                map(
-                    lambda m: schemas.MetricDTO(**m.model_dump(exclude={"profile_id"})),
-                    metrics,
-                )
-            )
-            return metrics
+        #     query = select(Metric).where(Metric.profile_id == profile_id)
+        #     scalars = (await session.execute(query)).scalars().all()
+        #     metrics = [schemas.MetricDTO.model_validate(s) for s in scalars]
+        #     # Strip metrics of profile_id
+        #     metrics = list(
+        #         map(
+        #             lambda m: schemas.MetricDTO(**m.model_dump(exclude={"profile_id"})),
+        #             metrics,
+        #         )
+        #     )
+        #     return metrics
 
-    async def update(self, update: schemas.MetricDTO):
+    async def update(self, profile_id: int, new_metric: schemas.MetricDTO):
         async with self._create_session() as session:
             metric = await session.get(Metric, id)
             if not metric:
                 raise NoMetricException()
 
             # Update relevant values
-            metric.name = update.name or metric.name
-            metric.value = update.value or metric.value
+            metric.name = new_metric.name or metric.name
+            metric.value = new_metric.value or metric.value
 
-            session.add(metric)
+            await session.execute(
+                update(Metric)
+                .where(Metric.id == id)
+                .values(**new_metric.model_dump(include={"name", "value"}))
+            )
             await session.commit()
 
             return await self.get(id)

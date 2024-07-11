@@ -53,7 +53,26 @@ class SqlUserInfoRepository(SqlBaseRepository):
         return schemas.UserInfoDTO.from_user_profile(user, profile)
 
     async def update(self, id: int, update: schemas.UserInfoDTO):
-        pass
+        userinfo = await self.get(id)
+        
+        userinfo.id = update.id or userinfo.id
+        userinfo.first_name = update.first_name or userinfo.first_name
+        userinfo.last_name = update.last_name or userinfo.last_name
+        userinfo.username = update.username or userinfo.username
+        userinfo.photo_url = update.photo_url or userinfo.photo_url
+
+        userinfo.about = update.about or userinfo.about
+        userinfo.date_of_birth = update.date_of_birth or userinfo.date_of_birth
+        userinfo.sex = update.sex or userinfo.sex
+        userinfo.religion = update.religion or userinfo.religion
+        userinfo.hobby = update.hobby or userinfo.hobby
+        userinfo.soc_media = update.soc_media or userinfo.soc_media
+        userinfo.metrics = update.metrics or userinfo.metrics
+        
+        await reps.user_repository.update(id, schemas.UserDTO.model_validate(userinfo))
+        await reps.profile_repository.update(id, schemas.ProfileDTO.model_validate(userinfo))
+        
+        return userinfo
 
     async def delete(self, id: int):
         # TODO: Fix ordering with cascade deletions. Deleting user should delete profile as well
