@@ -79,7 +79,8 @@ class SqlProfileRepository(SqlBaseRepository):
     async def delete(self, id: str):
         async with self._create_session() as session:
             query = delete(Profile).where(Profile.id == id)
-            return await session.execute(query)
+            await session.execute(query)
+            await session.commit()
 
 
 profile_repository: SqlProfileRepository = SqlProfileRepository()
