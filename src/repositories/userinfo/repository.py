@@ -50,9 +50,9 @@ class SqlUserInfoRepository(SqlBaseRepository):
         if not profile:
             raise EntityNotFoundException("profile")
 
-        return schemas.UserInfoDTO.from_user_profile(user, profile, False)
+        return schemas.UserInfoDTO.from_user_profile(user, profile)
 
-    async def update(self, id: int, update: schemas.UserInfoDTO):
+    async def update(self, id: int, update: schemas.UserInfoDTOUpd):
         userinfo = await self.get(id)
         
         userinfo.first_name = update.first_name or userinfo.first_name
@@ -71,7 +71,7 @@ class SqlUserInfoRepository(SqlBaseRepository):
         await reps.user_repository.update(id, schemas.UserDTO.model_validate(userinfo))
         await reps.profile_repository.update(id, schemas.ProfileDTOUpd.model_validate(userinfo))
         
-        return userinfo
+        return await self.get(id)
 
     async def delete(self, id: int):
         # TODO: Fix ordering with cascade deletions. Deleting user should delete profile as well

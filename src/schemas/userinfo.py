@@ -4,8 +4,7 @@ from pydantic import BaseModel
 from src import schemas
 
 
-class UserInfoDTO(BaseModel):
-    id: Optional[int] = None
+class UserInfoDTOUpd(BaseModel):
     first_name: Optional[str] = None
     last_name: Optional[str] = None
     username: Optional[str] = None
@@ -27,16 +26,27 @@ class UserInfoDTO(BaseModel):
         cls,
         user: schemas.UserDTO,
         profile: schemas.ProfileDTO,
-        need_id=True,
     ):
-        exclude_list = {} if need_id else {"id"}
+        return UserInfoDTOUpd.model_validate(
+            {
+                **user.model_dump(exclude={"id"}),
+                **profile.model_dump(exclude={"id"}),
+            }
+        )
+
+
+class UserInfoDTO(UserInfoDTOUpd):
+    id: int = None
+
+    @classmethod
+    def from_user_profile(
+        cls,
+        user: schemas.UserDTO,
+        profile: schemas.ProfileDTO,
+    ):
         return UserInfoDTO.model_validate(
             {
-                **user.model_dump(
-                    exclude=exclude_list,
-                ),
-                **profile.model_dump(
-                    exclude={"id"},
-                ),
+                **user.model_dump(),
+                **profile.model_dump(exclude={"id"}),
             }
         )
