@@ -30,7 +30,7 @@ class SqlUserRepository(SqlBaseRepository):
     async def delete(self, id: int):
         async with self._create_session() as session:
             query = delete(User).where(User.id == id)
-            return await session.scalar(query)
+            return await session.execute(query)
 
 
 user_repository: SqlUserRepository = SqlUserRepository()

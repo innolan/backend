@@ -1,13 +1,9 @@
 __all__ = ["router"]
 
-import os
-from fastapi import APIRouter, Depends
-from fastapi.security import OAuth2PasswordRequestForm
-import jwt
+from fastapi import APIRouter
 
 from src import repositories as reps
-from src.schemas import WebAppInitData, Token, UserInfoDTO
-from src.exceptions import NoUserException, UnauthorizedException
+from src.utils import messages
 
 router = APIRouter(
     prefix="/test",
@@ -15,6 +11,7 @@ router = APIRouter(
 )
 
 
-@router.delete("/user")
-async def wipe_user(id: str):
-    return await reps.userinfo_repository.delete(id)
+@router.delete("/user", response_model=messages.OK)
+async def wipe_user(id: int):
+    await reps.userinfo_repository.delete(id)
+    return messages.OK()
