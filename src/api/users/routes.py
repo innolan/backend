@@ -16,6 +16,14 @@ async def getUserInfo(id: str = Depends(get_id)):
     return await reps.userinfo_repository.get(id)
 
 
-@router.post("/me", response_model=schemas.UserInfoDTO)
-async def postUserInfo(userinfo: schemas.UserInfoDTO, id: str = Depends(get_id)):
+@router.put("/me", response_model=schemas.UserInfoDTO)
+async def updateUserInfo(userinfo: schemas.UserInfoDTO, id: str = Depends(get_id)):
     return await reps.userinfo_repository.update(id, userinfo)
+
+@router.post("/me/metric", description="Add new metric to a profile")
+async def addMetric(metric: schemas.MetricDTO, id: str = Depends(get_id)):
+    return await reps.metric_repository.create(id, metric)
+
+@router.put("/me/metric", description="Update existing metric in a profile")
+async def updateMetric(metric: schemas.MetricDTO, id: str = Depends(get_id)):
+    return await reps.metric_repository.update(id, metric)
