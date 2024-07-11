@@ -4,7 +4,7 @@ __all__ = ["SqlAuthRepository", "auth_repository"]
 import src.repositories as reps
 from src import schemas
 from src.repositories.baserepo import SqlBaseRepository
-from src.exceptions import NoUserException, UnauthorizedException, EntityExistsException
+from src.exceptions import EntityNotFoundException, UnauthorizedException, EntityExistsException
 
 
 class SqlAuthRepository(SqlBaseRepository):
@@ -12,7 +12,7 @@ class SqlAuthRepository(SqlBaseRepository):
         user = await reps.user_repository.get(username, False)
 
         if not user:
-            raise NoUserException()
+            raise EntityNotFoundException(username)
 
         if not user.verify_password(password):
             raise UnauthorizedException()

@@ -53,7 +53,7 @@ class SqlUserInfoRepository(SqlBaseRepository):
         return schemas.UserInfoDTO.from_user_profile(user, profile)
 
     async def update(self, id: int, update: schemas.UserInfoDTO):
-        raise NotImplementedException()
+        pass
 
     async def delete(self, id: int):
         # TODO: Fix ordering with cascade deletions. Deleting user should delete profile as well
