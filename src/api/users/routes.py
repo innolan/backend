@@ -11,11 +11,19 @@ from src import schemas
 router = APIRouter(prefix="/user", tags=["Users"])
 
 
-@router.get("/me", response_model=schemas.UserInfoDTO)
+@router.get(
+    "/me",
+    response_model=schemas.UserInfoDTO,
+    response_model_exclude_none=True,
+)
 async def getUserInfo(id: str = Depends(get_id)):
     return await reps.userinfo_repository.get(id)
 
 
-@router.put("/me", response_model=schemas.UserInfoDTO)
+@router.put(
+    "/me",
+    response_model=schemas.UserInfoDTO,
+    response_model_exclude_none=True,
+)
 async def updateUserInfo(userinfo: schemas.UserInfoDTO, id: str = Depends(get_id)):
     return await reps.userinfo_repository.update(id, userinfo)
