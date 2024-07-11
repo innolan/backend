@@ -35,26 +35,26 @@ class SqlProfileRepository(SqlBaseRepository):
             profile = await session.get(Profile, profile_id)
             return True if profile else False
 
-    async def update(self, id: int, new_profile: schemas.ProfileDTO):
+    async def update(self, id: int, new_profile: schemas.ProfileDTOUpd):
         async with self._create_session() as session:
-            profile = await self.get(id)
+            profile_ret = await self.get(id)
 
-            profile.about = new_profile.about or profile.about
-            profile.date_of_birth = new_profile.date_of_birth or profile.date_of_birth
-            profile.sex = new_profile.sex or profile.sex
-            profile.religion = new_profile.religion or profile.religion
-            profile.hobby = new_profile.hobby or profile.hobby
-            profile.soc_media = new_profile.soc_media or profile.soc_media
+            profile_ret.about = new_profile.about or profile_ret.about
+            profile_ret.date_of_birth = new_profile.date_of_birth or profile_ret.date_of_birth
+            profile_ret.sex = new_profile.sex or profile_ret.sex
+            profile_ret.religion = new_profile.religion or profile_ret.religion
+            profile_ret.hobby = new_profile.hobby or profile_ret.hobby
+            profile_ret.soc_media = new_profile.soc_media or profile_ret.soc_media
 
-            session.execute(
+            await session.execute(
                 update(Profile)
-                .where(Profile.id == profile.id)
-                .values(profile.model_dump(exclude={"id", "metric"}))
+                .where(Profile.id == id)
+                .values(**profile_ret.model_dump(exclude={"metrics"}))
             )
 
             await session.commit()
 
-            return await self.get(new_profile.id)
+            return await self.get(id)
 
     async def delete(self, id: str):
         async with self._create_session() as session:

@@ -15,10 +15,12 @@ class ProfileDTOUpd(BaseModel):
 
     class Config:
         from_attributes = True
-        
-class ProfileDTO(ProfileDTOUpd):
-    id: int
 
 
 class ProfileDTORet(ProfileDTOUpd):
+    metrics: Optional[list[MetricDTO]] = None
+
+
+class ProfileDTO(ProfileDTOUpd):
+    id: int
     metrics: Optional[list[MetricDTO]] = None

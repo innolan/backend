@@ -55,7 +55,6 @@ class SqlUserInfoRepository(SqlBaseRepository):
     async def update(self, id: int, update: schemas.UserInfoDTO):
         userinfo = await self.get(id)
         
-        userinfo.id = update.id or userinfo.id
         userinfo.first_name = update.first_name or userinfo.first_name
         userinfo.last_name = update.last_name or userinfo.last_name
         userinfo.username = update.username or userinfo.username
@@ -70,7 +69,7 @@ class SqlUserInfoRepository(SqlBaseRepository):
         userinfo.metrics = update.metrics or userinfo.metrics
         
         await reps.user_repository.update(id, schemas.UserDTO.model_validate(userinfo))
-        await reps.profile_repository.update(id, schemas.ProfileDTO.model_validate(userinfo))
+        await reps.profile_repository.update(id, schemas.ProfileDTOUpd.model_validate(userinfo))
         
         return userinfo
 
