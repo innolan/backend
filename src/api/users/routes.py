@@ -25,5 +25,5 @@ async def addMetric(metric: schemas.MetricDTO, id: str = Depends(get_id)):
     return await reps.metric_repository.create(id, metric)
 
 @router.put("/me/metric", description="Update existing metric in a profile")
-async def updateMetric(metric: schemas.MetricDTO, id: str = Depends(get_id)):
+async def updateMetric(metric: schemas.MetricDTOUpd, id: str = Depends(get_id)):
     return await reps.metric_repository.update(id, metric)
