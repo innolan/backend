@@ -8,9 +8,7 @@ import jwt
 from src import schemas
 from src.utils import messages
 from src import repositories as reps
-from src.exceptions import (
-    UnauthorizedException,
-)
+from src.exceptions import UnauthorizedException
 
 router = APIRouter(
     prefix="/auth",

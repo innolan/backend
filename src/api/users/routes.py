@@ -15,3 +15,7 @@ router = APIRouter(prefix="/users", tags=["Users"])
 async def getUserInfo(id: str = Depends(get_id)):
     return await reps.userinfo_repository.get(id)
 
+
+@router.post("/me", response_model=schemas.UserInfoDTO)
+async def postUserInfo(userinfo: schemas.UserInfoDTO, id: str = Depends(get_id)):
+    return await reps.userinfo_repository.update(id, userinfo)
