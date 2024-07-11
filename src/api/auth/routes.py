@@ -18,9 +18,9 @@ router = APIRouter(
 
 @router.post(
     "/token",
-    # response_model=schemas.Token,
     responses={
         200: {"model": schemas.Token},
+        401: {"model": messages.Message},
         404: {"model": messages.Message},
     },
 )
@@ -41,7 +41,7 @@ async def token(form_data: OAuth2PasswordRequestForm = Depends()):
     "/register",
     responses={
         200: {"model": schemas.UserInfoDTO},
-        409: {"model": messages.Message},
+        409: {"model": messages.Conflict},
     },
 )
 async def register(initData: schemas.WebAppInitData):

@@ -2,7 +2,20 @@ from pydantic import BaseModel
 
 
 class Message(BaseModel):
-    message: str
-    
+    detail: str
+
+
 class OK(Message):
-    message: str = "OK!"
+    detail: str = "OK!"
+
+
+class Conflict(Message):
+    detail: str = "Conflict with an existing entity"
+
+
+class Unauthorized(Message):
+    detail: str = "Unauthorized"
+
+
+class NotFound(Message):
+    detail: str = "Some entity not found"
