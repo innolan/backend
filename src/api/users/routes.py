@@ -13,5 +13,5 @@ router = APIRouter(prefix="/users", tags=["Users"])
 
 @router.get("/me", response_model=schemas.UserInfoDTO)
 async def getUserInfo(id: str = Depends(get_id)):
-    return await reps.user_repository.get(id)
+    return await reps.userinfo_repository.get(id)
 
