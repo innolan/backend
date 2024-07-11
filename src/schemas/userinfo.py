@@ -36,7 +36,7 @@ class UserInfoDTOUpd(BaseModel):
 
 
 class UserInfoDTO(UserInfoDTOUpd):
-    id: int = None
+    id: int
 
     @classmethod
     def from_user_profile(
