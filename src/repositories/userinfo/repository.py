@@ -50,7 +50,7 @@ class SqlUserInfoRepository(SqlBaseRepository):
         if not profile:
             raise EntityNotFoundException("profile")
 
-        return schemas.UserInfoDTO.from_user_profile(user, profile)
+        return schemas.UserInfoDTO.from_user_profile(user, profile, False)
 
     async def update(self, id: int, update: schemas.UserInfoDTO):
         userinfo = await self.get(id)

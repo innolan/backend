@@ -23,7 +23,7 @@ class SqlProfileRepository(SqlBaseRepository):
             raw_profile = await session.get(Profile, id)
             if not raw_profile:
                 return None
-            profile = schemas.ProfileDTO.model_validate(raw_profile)
+            profile = schemas.ProfileDTORet.model_validate(raw_profile)
 
             metrics = await reps.metric_repository.get_by_profile_id(id)
             profile.metrics = metrics

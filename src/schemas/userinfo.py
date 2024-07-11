@@ -23,10 +23,18 @@ class UserInfoDTO(BaseModel):
         from_attributes = True
 
     @classmethod
-    def from_user_profile(cls, user: schemas.UserDTO, profile: schemas.ProfileDTO):
+    def from_user_profile(
+        cls,
+        user: schemas.UserDTO,
+        profile: schemas.ProfileDTO,
+        need_id=True,
+    ):
+        exclude_list = {} if need_id else {"id"}
         return UserInfoDTO.model_validate(
             {
-                **user.model_dump(),
+                **user.model_dump(
+                    exclude=exclude_list,
+                ),
                 **profile.model_dump(
                     exclude={"id"},
                 ),

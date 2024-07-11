@@ -5,8 +5,7 @@ from typing import Optional
 from src.schemas import MetricDTO
 
 
-class ProfileDTO(BaseModel):
-    id: Optional[int] = None
+class ProfileDTOUpd(BaseModel):
     about: Optional[str] = None
     date_of_birth: Optional[datetime] = None
     sex: Optional[int] = None
@@ -16,3 +15,10 @@ class ProfileDTO(BaseModel):
 
     class Config:
         from_attributes = True
+        
+class ProfileDTO(ProfileDTOUpd):
+    id: int
+
+
+class ProfileDTORet(ProfileDTOUpd):
+    metrics: Optional[list[MetricDTO]] = None

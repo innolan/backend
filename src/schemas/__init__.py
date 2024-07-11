@@ -3,6 +3,8 @@ __all__ = [
     "MetricDTOAdd",
     "MetricDTOUpd",
     "ProfileDTO",
+    "ProfileDTOUpd",
+    "ProfileDTORet",
     "UserDTO",
     "WebAppInitData",
     "WebAppUser",
@@ -12,7 +14,7 @@ __all__ = [
 ]
 
 from src.schemas.metric import MetricDTO, MetricDTOAdd, MetricDTOUpd    
-from src.schemas.profile import ProfileDTO
+from src.schemas.profile import ProfileDTO, ProfileDTOUpd, ProfileDTORet
 from src.schemas.user import UserDTO
 from src.schemas.webapp import WebAppInitData, WebAppUser
 from src.schemas.auth import Token
