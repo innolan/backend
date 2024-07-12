@@ -15,7 +15,7 @@ class ProfileDTOUpd(BaseModel):
             ),
         ]
     ] = None
-    sex: Optional[int] = None
+    sex: Optional[str] = None
     religion: Optional[str] = None
     hobby: Optional[list[str]] = None
     soc_media: Optional[list[str]] = None

@@ -17,7 +17,7 @@ class Profile(Base):
     
     # Attributes
     date_of_birth: Mapped[str] = mapped_column(String(10), nullable=True)
-    sex: Mapped[int] = mapped_column(nullable=True)
+    sex: Mapped[str] = mapped_column(String(50), nullable=True)
     religion: Mapped[str] = mapped_column(String(40), nullable=True)
     about: Mapped[str] = mapped_column(String(2000), nullable=True)
     hobby: Mapped[list[str]] = mapped_column(ARRAY(String), nullable=True)
