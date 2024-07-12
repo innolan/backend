@@ -1,6 +1,7 @@
 from typing import Optional
 from pydantic import BaseModel
 from src import schemas
+from src.utils.types import Date
 
 
 class UserInfoDTOUpd(BaseModel):
