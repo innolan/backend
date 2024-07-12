@@ -1,7 +1,6 @@
 from dataclasses import dataclass
-from datetime import datetime
 
-from sqlalchemy import BigInteger, Column, DateTime, Integer, String, ForeignKey
+from sqlalchemy import BigInteger, String, ForeignKey
 from sqlalchemy.dialects.postgresql import ARRAY
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 

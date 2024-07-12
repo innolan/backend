@@ -1,8 +1,7 @@
 from dataclasses import dataclass
-from datetime import datetime
 from typing import Optional
 
-from sqlalchemy import BigInteger, ForeignKey, String, DateTime
+from sqlalchemy import String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from src.storage.sql.__mixin__ import IdMixin
@@ -12,7 +11,7 @@ from src.storage.sql.models.base import Base
 @dataclass
 class User(Base, IdMixin):
     __tablename__ = "users"
-
+    
     # Attributes
     first_name: Mapped[str] = mapped_column(String(40))
     last_name: Mapped[Optional[str]] = mapped_column(String(40), nullable=True)

@@ -1,4 +1,3 @@
-from datetime import datetime
 from typing import Optional
 from pydantic import BaseModel
 from src import schemas
@@ -11,7 +10,7 @@ class UserInfoDTOUpd(BaseModel):
     photo_url: Optional[str] = None
 
     about: Optional[str] = None
-    date_of_birth: Optional[datetime] = None
+    date_of_birth: Optional[Date] = None
     sex: Optional[int] = None
     religion: Optional[str] = None
     hobby: Optional[list[str]] = None
