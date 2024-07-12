@@ -10,6 +10,8 @@ from src.utils.crypt_context import pwd_context
 from src.storage.sql.models import User, Profile
 from src.exceptions import EntityNotFoundException, NotImplementedException
 
+from sqlalchemy import delete, update
+
 
 class SqlUserInfoRepository(SqlBaseRepository):
     async def initialize(self, initData: WebAppInitData):
@@ -77,6 +79,67 @@ class SqlUserInfoRepository(SqlBaseRepository):
         # TODO: Fix ordering with cascade deletions. Deleting user should delete profile as well
         await reps.profile_repository.delete(id)
         await reps.user_repository.delete(id)
+
+    # Functions for likes, dislikes and favourites
+    async def putLike(self, target_id, id):
+        async with self._create_session() as session:
+            user = await reps.user_repository.get(id)
+            profile = await reps.profile_repository.get(id)
+            if not user:
+                raise EntityNotFoundException("user")
+            if not profile:
+                raise EntityNotFoundException("profile")
+
+            profile.likes.append(target_id)
+            await session.execute(
+                update(Profile)
+                .where(Profile.id == profile.id)
+                .values(profile.model_dump(exclude={"id", "metric"}))
+            )
+            await session.commit()
+
+            return await self.get(id)
+
+
+    async def putDislike(self, target_id, id):
+        async with self._create_session() as session:
+            user = await reps.user_repository.get(id)
+            profile = await reps.profile_repository.get(id)
+            if not user:
+                raise EntityNotFoundException("user")
+            if not profile:
+                raise EntityNotFoundException("profile")
+
+            profile.dislikes.append(target_id)
+            await session.execute(
+                update(Profile)
+                .where(Profile.id == profile.id)
+                .values(profile.model_dump(exclude={"id", "metric"}))
+            )
+            await session.commit()
+
+            return await self.get(id)
+
+
+    async def putFavourite(self, target_id, id):
+        async with self._create_session() as session:
+            user = await reps.user_repository.get(id)
+            profile = await reps.profile_repository.get(id)
+            if not user:
+                raise EntityNotFoundException("user")
+            if not profile:
+                raise EntityNotFoundException("profile")
+
+            profile.favourites.append(target_id)
+            await session.execute(
+                update(Profile)
+                .where(Profile.id == profile.id)
+                .values(profile.model_dump(exclude={"id", "metric"}))
+            )
+            await session.commit()
+
+            return await self.get(id)
+
 
 
 userinfo_repository: SqlUserInfoRepository = SqlUserInfoRepository()

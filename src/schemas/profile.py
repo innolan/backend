@@ -14,6 +14,10 @@ class ProfileDTOUpd(BaseModel):
     religion: Optional[str] = None
     hobby: Optional[list[str]] = None
     soc_media: Optional[list[str]] = None
+    metrics: Optional[list[MetricDTO]] = None
+    likes: Optional[list[int]] = None
+    dislikes: Optional[list[int]] = None
+    favourites: Optional[list[int]] = None
 
     class Config:
         from_attributes = True

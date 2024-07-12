@@ -17,6 +17,9 @@ class UserInfoDTOUpd(BaseModel):
     hobby: Optional[list[str]] = None
     soc_media: Optional[list[str]] = None
     metrics: Optional[list[schemas.MetricDTO]] = None
+    likes: Optional[list[int]] = None
+    dislikes: Optional[list[int]] = None
+    favourites: Optional[list[int]] = None
 
     class Config:
         from_attributes = True

@@ -21,7 +21,10 @@ class Profile(Base):
     about: Mapped[str] = mapped_column(String(2000), nullable=True)
     hobby: Mapped[list[str]] = mapped_column(ARRAY(String), nullable=True)
     soc_media: Mapped[list[str]] = mapped_column(ARRAY(String), nullable=True)
-    
+    likes: Mapped[list[int]] = mapped_column(ARRAY(Integer), nullable=True)
+    dislikes: Mapped[list[int]] = mapped_column(ARRAY(Integer), nullable=True)
+    favourites: Mapped[list[int]] = mapped_column(ARRAY(Integer), nullable=True)
+
     # Relations
     user = relationship("User", back_populates="profile")
     _profile_metric = relationship("Metric", cascade="all, delete-orphan")
