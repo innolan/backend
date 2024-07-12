@@ -16,7 +16,7 @@ class Profile(Base):
     id: Mapped[int] = mapped_column(BigInteger, ForeignKey('users.id'), primary_key=True)
     
     # Attributes
-    date_of_birth: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=True)
+    date_of_birth: Mapped[str] = mapped_column(String(10), nullable=True)
     sex: Mapped[int] = mapped_column(nullable=True)
     religion: Mapped[str] = mapped_column(String(40), nullable=True)
     about: Mapped[str] = mapped_column(String(2000), nullable=True)
