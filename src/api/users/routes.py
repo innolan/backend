@@ -44,11 +44,11 @@ async def putLikes(target_id: int, id: str = Depends(get_id)):
     return await reps.userinfo_repository.putLike(target_id, id)
 
 
-@router.put("/me/dislikes/{target_id}", response_model=schemas.UserInfoDTO)
+@router.put("/me/dislikes/{target_id}", response_model=list[int])
 async def putDislikes(target_id: int, id: str = Depends(get_id)):
     return await reps.userinfo_repository.putDislike(target_id, id)
 
 
-@router.put("/me/favourites/{target_id}", response_model=schemas.UserInfoDTO)
-async def putFavourites(target_id: int, id: str = Depends(get_id)):
-    return await reps.userinfo_repository.putFavourite(target_id, id)
+@router.put("/me/favorites/{target_id}", response_model=list[int])
+async def putFavorites(target_id: int, id: str = Depends(get_id)):
+    return await reps.userinfo_repository.putFavorite(target_id, id)

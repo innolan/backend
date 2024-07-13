@@ -118,10 +118,10 @@ class SqlUserInfoRepository(SqlBaseRepository):
             )
             await session.commit()
 
-            return await self.get(id)
+            return (await self.get(id)).dislikes
 
 
-    async def putFavourite(self, target_id, id):
+    async def putFavorite(self, target_id, id):
         async with self._create_session() as session:
             user = await reps.user_repository.get(id)
             profile = await reps.profile_repository.get(id)
@@ -130,7 +130,7 @@ class SqlUserInfoRepository(SqlBaseRepository):
             if not profile:
                 raise EntityNotFoundException("profile")
 
-            profile.favourites.append(target_id)
+            profile.favorites.append(target_id)
             await session.execute(
                 update(Profile)
                 .where(Profile.id == profile.id)
@@ -138,7 +138,7 @@ class SqlUserInfoRepository(SqlBaseRepository):
             )
             await session.commit()
 
-            return await self.get(id)
+            return (await self.get(id)).favorites
 
 
 

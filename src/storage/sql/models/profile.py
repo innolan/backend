@@ -23,7 +23,7 @@ class Profile(Base):
     soc_media: Mapped[list[str]] = mapped_column(ARRAY(String), nullable=True)
     likes: Mapped[list[int]] = mapped_column(ARRAY(Integer), nullable=True)
     dislikes: Mapped[list[int]] = mapped_column(ARRAY(Integer), nullable=True)
-    favourites: Mapped[list[int]] = mapped_column(ARRAY(Integer), nullable=True)
+    favorites: Mapped[list[int]] = mapped_column(ARRAY(Integer), nullable=True)
 
     # Relations
     user = relationship("User", back_populates="profile")
