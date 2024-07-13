@@ -22,8 +22,6 @@ class User(Base, IdMixin):
     # Relations
     profile = relationship("Profile", back_populates="user")
     
-    user_info = relationship("UserInfo", uselist=False, back_populates="user")
-    
     _user_participant = relationship(
         "Participant", back_populates="_participant_user", cascade="all, delete-orphan"
     )
