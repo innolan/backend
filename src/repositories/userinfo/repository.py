@@ -23,7 +23,7 @@ class SqlUserInfoRepository(SqlBaseRepository):
                 first_name=initData.user.first_name,
                 last_name=initData.user.last_name,
                 auth_date_hash=pwd_context.hash(str(initData.auth_date)),
-                photo_url=initData.user.photo_url,
+                photo_url=[initData.user.photo_url],
             )
             raw_user = User(**user.model_dump())
 

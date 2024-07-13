@@ -8,7 +8,7 @@ class UserDTO(BaseModel):
     last_name: Optional[str] = None
     username: Optional[str] = None
     auth_date_hash: Optional[str] = None
-    photo_url: Optional[str] = None
+    photo_url: Optional[list[str]] = None
 
     def verify_password(self, password: int):
         return pwd_context.verify(str(password), str(self.auth_date_hash))

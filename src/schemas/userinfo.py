@@ -8,7 +8,7 @@ class UserInfoDTOUpd(BaseModel):
     first_name: Optional[str] = None
     last_name: Optional[str] = None
     username: Optional[str] = None
-    photo_url: Optional[str] = None
+    photo_url: Optional[list[str]] = None
 
     about: Optional[str] = None
     date_of_birth: Optional[Date] = None
