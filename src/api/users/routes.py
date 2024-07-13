@@ -38,3 +38,17 @@ async def updateUserInfo(
     id: str = Depends(get_id),
 ):
     return await reps.userinfo_repository.update(id, userinfo)
+
+@router.put("/me/likes/{target_id}", response_model=schemas.UserInfoDTO)
+async def putLikes(target_id: int, id: str = Depends(get_id)):
+    return await reps.userinfo_repository.putLike(target_id, id)
+
+
+@router.put("/me/dislikes/{target_id}", response_model=list[int])
+async def putDislikes(target_id: int, id: str = Depends(get_id)):
+    return await reps.userinfo_repository.putDislike(target_id, id)
+
+
+@router.put("/me/favorites/{target_id}", response_model=list[int])
+async def putFavorites(target_id: int, id: str = Depends(get_id)):
+    return await reps.userinfo_repository.putFavorite(target_id, id)
