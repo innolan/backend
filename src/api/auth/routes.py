@@ -1,6 +1,8 @@
 __all__ = ["router"]
 
 import os
+from datetime import datetime, timedelta, timezone
+
 from fastapi import APIRouter, Depends
 from fastapi.security import OAuth2PasswordRequestForm
 import jwt
@@ -33,7 +35,10 @@ async def token(form_data: OAuth2PasswordRequestForm = Depends()):
     if not user:
         raise UnauthorizedException()
 
-    token = jwt.encode({"sub": user.id}, os.getenv("JWT_TOKEN"))
+    expires_in = datetime.now() + timedelta(minutes=float(os.getenv("JWT_TTL")))
+    expires_in = expires_in.timestamp()
+
+    token = jwt.encode({"sub": user.id, 'exp': expires_in}, os.getenv("JWT_TOKEN"))
     return schemas.Token(access_token=token)
 
 
