@@ -1,8 +1,8 @@
-"""Reset DB history
+"""Reset migration history
 
-Revision ID: a15bbe989ec1
+Revision ID: b52980fbd349
 Revises: 
-Create Date: 2024-07-09 15:31:36.158893
+Create Date: 2024-07-13 13:42:07.530531
 
 """
 from typing import Sequence, Union
@@ -12,7 +12,7 @@ import sqlalchemy as sa
 from sqlalchemy.dialects import postgresql
 
 # revision identifiers, used by Alembic.
-revision: str = 'a15bbe989ec1'
+revision: str = 'b52980fbd349'
 down_revision: Union[str, None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
@@ -31,9 +31,9 @@ def upgrade() -> None:
     op.create_table('users',
     sa.Column('first_name', sa.String(length=40), nullable=False),
     sa.Column('last_name', sa.String(length=40), nullable=True),
-    sa.Column('username', sa.String(length=60), nullable=False),
-    sa.Column('photo_url', sa.String(length=200), nullable=False),
-    sa.Column('auth_date', sa.BigInteger(), nullable=False),
+    sa.Column('username', sa.String(length=60), nullable=True),
+    sa.Column('photo_url', sa.ARRAY(sa.String(length=200)), nullable=True),
+    sa.Column('auth_date_hash', sa.String(length=200), nullable=False),
     sa.Column('id', sa.BigInteger(), nullable=False),
     sa.PrimaryKeyConstraint('id')
     )
@@ -46,15 +46,17 @@ def upgrade() -> None:
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('profiles',
-    sa.Column('date_of_birth', sa.DateTime(timezone=True), nullable=True),
-    sa.Column('sex', sa.Integer(), nullable=True),
+    sa.Column('id', sa.BigInteger(), nullable=False),
+    sa.Column('date_of_birth', sa.String(length=10), nullable=True),
+    sa.Column('sex', sa.String(length=50), nullable=True),
     sa.Column('religion', sa.String(length=40), nullable=True),
     sa.Column('about', sa.String(length=2000), nullable=True),
     sa.Column('hobby', postgresql.ARRAY(sa.String()), nullable=True),
     sa.Column('soc_media', postgresql.ARRAY(sa.String()), nullable=True),
-    sa.Column('user_id', sa.BigInteger(), nullable=True),
-    sa.Column('id', sa.BigInteger(), nullable=False),
-    sa.ForeignKeyConstraint(['user_id'], ['users.id'], ondelete='CASCADE'),
+    sa.Column('likes', postgresql.ARRAY(sa.Integer()), nullable=True),
+    sa.Column('dislikes', postgresql.ARRAY(sa.Integer()), nullable=True),
+    sa.Column('favorites', postgresql.ARRAY(sa.Integer()), nullable=True),
+    sa.ForeignKeyConstraint(['id'], ['users.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('matches',
