@@ -23,7 +23,7 @@ router = APIRouter(
     },
     status_code=201,
 )
-async def addMetric(metric: schemas.MetricDTO, id: str = Depends(get_id)):
+async def addMetric(metric: schemas.MetricDTOAdd, id: str = Depends(get_id)):
     return await reps.metric_repository.create(id, metric)
 
 
@@ -36,5 +36,5 @@ async def addMetric(metric: schemas.MetricDTO, id: str = Depends(get_id)):
         404: {"model": messages.NotFound},
     },
 )
-async def updateMetric(metric: schemas.MetricDTOUpd, id: str = Depends(get_id)):
+async def updateMetric(metric: schemas.MetricDTO, id: str = Depends(get_id)):
     return await reps.metric_repository.update(id, metric)

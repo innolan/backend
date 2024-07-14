@@ -3,6 +3,7 @@ from pydantic import BaseModel
 
 
 class MetricDTO(BaseModel):
+    id: int
     name: str
     value: float
 
@@ -10,8 +11,10 @@ class MetricDTO(BaseModel):
         from_attributes = True
 
 
-class MetricDTOAdd(MetricDTO):
-    profile_id: Optional[int] = None
+class MetricDTOAdd(BaseModel):
+    profile_id: int
+    name: str
+    value: float
 
-class MetricDTOUpd(MetricDTO):
-    id: int 
+    class Config:
+        from_attributes = True
