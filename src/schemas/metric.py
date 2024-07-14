@@ -9,7 +9,7 @@ class MetricDTO(BaseModel):
 
     class Config:
         from_attributes = True
-
+        
 
 class MetricDTOAdd(BaseModel):
     profile_id: int

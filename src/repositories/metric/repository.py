@@ -19,7 +19,7 @@ class SqlMetricRepository(SqlBaseRepository):
 
             return schemas.MetricDTO.model_validate(metric)
 
-    async def create(self, profile_id: int, create: schemas.MetricDTO):
+    async def create(self, profile_id: int, create: schemas.MetricDTOAdd):
         async with self._create_session() as session:
             metric = Metric(
                 **{

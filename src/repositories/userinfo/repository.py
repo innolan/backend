@@ -7,7 +7,7 @@ from src import schemas
 from src import repositories as reps
 
 from src.utils.crypt_context import pwd_context
-from src.storage.sql.models import User, Profile
+from src.storage.sql.models import User, Profile, Metric
 from src.exceptions import EntityNotFoundException, NotImplementedException
 
 from sqlalchemy import delete, update
@@ -23,7 +23,11 @@ class SqlUserInfoRepository(SqlBaseRepository):
                 first_name=initData.user.first_name,
                 last_name=initData.user.last_name,
                 auth_date_hash=pwd_context.hash(str(initData.auth_date)),
-                photo_url=[initData.user.photo_url] if initData.user.photo_url is not None else None,
+                photo_url=(
+                    [initData.user.photo_url]
+                    if initData.user.photo_url is not None
+                    else None
+                ),
             )
             raw_user = User(**user.model_dump())
 
@@ -35,12 +39,28 @@ class SqlUserInfoRepository(SqlBaseRepository):
                 user=raw_user,
             )
 
-            # 3. Add them to DB
-            session.add(raw_user)
-            session.add(raw_profile)
+            # 3. Create metrics
+            starter_metric_names = [
+                "nightOwl",
+                "cleanliness",
+                "noiseLevel",
+                "alcohol",
+                "smoking",
+            ]
+            raw_metrics = [
+                Metric(profile_id=initData.user.id, name=n, value=0)
+                for n in starter_metric_names
+            ]
+
+
+            # 4. Add everything to DB
+            session.add_all([raw_user, raw_profile, *raw_metrics])
             await session.commit()
 
-            # 4. Return a UserInfo object
+            # 5. Return a UserInfo object
+            profile.metrics = list(
+                map(lambda m: schemas.MetricDTO.model_validate(m), raw_metrics)
+            )
             return schemas.UserInfoDTO.from_user_profile(user, profile)
 
     async def get(self, id: int):
@@ -56,7 +76,7 @@ class SqlUserInfoRepository(SqlBaseRepository):
 
     async def update(self, id: int, update: schemas.UserInfoDTOUpd):
         userinfo = await self.get(id)
-        
+
         userinfo.first_name = update.first_name or userinfo.first_name
         userinfo.last_name = update.last_name or userinfo.last_name
         userinfo.username = update.username or userinfo.username
@@ -69,10 +89,12 @@ class SqlUserInfoRepository(SqlBaseRepository):
         userinfo.hobby = update.hobby or userinfo.hobby
         userinfo.soc_media = update.soc_media or userinfo.soc_media
         userinfo.metrics = update.metrics or userinfo.metrics
-        
+
         await reps.user_repository.update(id, schemas.UserDTO.model_validate(userinfo))
-        await reps.profile_repository.update(id, schemas.ProfileDTOUpd.model_validate(userinfo))
-        
+        await reps.profile_repository.update(
+            id, schemas.ProfileDTOUpd.model_validate(userinfo)
+        )
+
         return await self.get(id)
 
     async def delete(self, id: int):
@@ -100,7 +122,6 @@ class SqlUserInfoRepository(SqlBaseRepository):
 
             return await self.get(id)
 
-
     async def putDislike(self, target_id, id):
         async with self._create_session() as session:
             user = await reps.user_repository.get(id)
@@ -120,7 +141,6 @@ class SqlUserInfoRepository(SqlBaseRepository):
 
             return (await self.get(id)).dislikes
 
-
     async def putFavorite(self, target_id, id):
         async with self._create_session() as session:
             user = await reps.user_repository.get(id)
@@ -139,7 +159,6 @@ class SqlUserInfoRepository(SqlBaseRepository):
             await session.commit()
 
             return (await self.get(id)).favorites
-
 
 
 userinfo_repository: SqlUserInfoRepository = SqlUserInfoRepository()

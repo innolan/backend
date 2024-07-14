@@ -8,13 +8,12 @@ from src import repositories as reps
 from src.middleware.auth_guard import get_id
 
 router = APIRouter(
-    prefix="/metric",
     tags=["Metrics"],
 )
 
 
 @router.post(
-    "/",
+    "/metric",
     description="Add new metric to a profile",
     responses={
         201: {"model": schemas.MetricDTO},
@@ -28,7 +27,7 @@ async def addMetric(metric: schemas.MetricDTOAdd, id: str = Depends(get_id)):
 
 
 @router.put(
-    "/",
+    "/metric",
     description="Update existing metric in a profile",
     responses={
         200: {"model": schemas.MetricDTO},
