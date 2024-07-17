@@ -61,7 +61,7 @@ class SqlMetricRepository(SqlBaseRepository):
 
     async def update(self, profile_id: int, new_metric: schemas.MetricDTO):
         async with self._create_session() as session:
-            metric = await session.get(Metric, id)
+            metric = await session.get(Metric, profile_id)
             if not metric:
                 raise NoMetricException()
 
@@ -71,12 +71,12 @@ class SqlMetricRepository(SqlBaseRepository):
 
             await session.execute(
                 update(Metric)
-                .where(Metric.id == id)
+                .where(Metric.id == profile_id)
                 .values(**new_metric.model_dump(include={"name", "value"}))
             )
             await session.commit()
 
-            return await self.get(id)
+            return await self.get(profile_id)
 
 
 metric_repository: SqlMetricRepository = SqlMetricRepository()
