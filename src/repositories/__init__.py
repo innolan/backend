@@ -3,6 +3,7 @@ from src.repositories.metric.repository import metric_repository
 from src.repositories.profile.repository import profile_repository
 from src.repositories.userinfo.repository import userinfo_repository
 from src.repositories.user.repository import user_repository
+from src.repositories.matching.repository import matching_repository
 
 
 __all__ = [
@@ -11,4 +12,5 @@ __all__ = [
     "profile_repository",
     "user_repository",
     "userinfo_repository",
+    "matching_repository",
 ]
