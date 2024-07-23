@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from sqlalchemy import ForeignKey
+from sqlalchemy import ForeignKey, Boolean
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from src.storage.sql.__mixin__ import IdMixin
@@ -15,11 +15,17 @@ class Match(Base):
     primary_id: Mapped[int] = mapped_column(
         ForeignKey("profiles.id"),
         primary_key=True,
-        nullable=True,
     )
     secondary_id: Mapped[int] = mapped_column(
         ForeignKey("profiles.id"),
         primary_key=True,
-        nullable=True,
     )
 
+    primary_ack: Mapped[bool] = mapped_column(
+        Boolean,
+        nullable=False,
+    )
+    secondary_ack: Mapped[bool] = mapped_column(
+        Boolean,
+        nullable=False,
+    )

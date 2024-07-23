@@ -30,12 +30,17 @@ class SqlMatchingRepository(SqlBaseRepository):
             )
             existing_match = (await session.execute(query)).scalar_one_or_none()
             if existing_match:
+                existing_match.secondary_ack = True
+                session.add(existing_match)
+                await session.commit()
                 return schemas.MatchDTO.model_validate(existing_match)
 
             # Otherwise, create a match
             raw_match = Match(
                 primary_id=primary_id,
                 secondary_id=secondary_id,
+                primary_ack=True,
+                secondary_ack=False,
             )
             session.add(raw_match)
 
