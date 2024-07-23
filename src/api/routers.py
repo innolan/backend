@@ -9,6 +9,7 @@ routers = [
     router_users,
     router_metrics,
     router_test,
+    router_test,
     router_matching,
 ]
 
