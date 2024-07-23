@@ -1,6 +1,7 @@
 __all__ = ["SqlMatchingRepository", "matching_repository"]
 
 
+import asyncio
 from sqlalchemy import delete, select
 from src.repositories.baserepo import SqlBaseRepository
 
@@ -12,6 +13,7 @@ from src.exceptions import (
 from src.storage.sql.models import Metric, Match
 import src.utils.messages as messages
 import src.schemas as schemas
+import src.repositories as reps
 
 MINIMUM_MATCHED_METRICS = 3
 COMPARE_METRICS_VALUE = 0.3
@@ -63,52 +65,30 @@ class SqlMatchingRepository(SqlBaseRepository):
             await session.execute(query)
             return messages.OK
 
-    def compare_metrics(self, firstMetric: Metric, secondMetric: Metric) -> bool:
-        if abs(firstMetric.value - secondMetric.value) > COMPARE_METRICS_VALUE:
-            return False
-        return True
-
-    def compare(
-        self, firstProfileMetrics: list[Metric], secondProfileMetrics: list[Metric]
-    ) -> int:
-        matchedMetrics = 0
-        for i in range(len(firstProfileMetrics)):
-            if self.compare_metrics(firstProfileMetrics[i], secondProfileMetrics[i]):
-                matchedMetrics += 1
-        return matchedMetrics
-
-    async def get(self, profile_id):
+    async def get(self, id) -> list[schemas.ProfileDTO]:
         async with self._create_session() as session:
-            # get profile metrics
-            query = select(Metric).where(Metric.profile_id == profile_id)
-            profileMetrics = (await session.execute(query)).scalars()
-            if not profileMetrics:
-                raise EntityNotFoundException("Profile not found")
+            query = select(Match).where(
+                (Match.primary_id is id and Match.secondary_id is not id)
+                or (Match.primary_id is not id and Match.secondary_id is id)
+            )
+            query = select(Match).where(Match.primary_id == id)
+            matches = (await session.execute(query)).scalars().all()
 
-            # get all metrics
-            allMetrics = {}
-            query = select(Metric)
-            metrics = (await session.execute(query)).scalars()
-            for metric in metrics:
-                if (
-                    metric.profile_id not in allMetrics
-                    and metric.profile_id != profile_id
-                ):
-                    allMetrics[metric.profile_id] = []
-                allMetrics[metric.profile_id].append(metric)
+            profiles_promises = []
 
-            result = []
-            for profileId, metrics in allMetrics.items():
-                # matchedMetrics is amount of metrics which are similar to profileMetrics
-                # they are used for sorting
-                matchedMetrics = self.compare(profileMetrics, metrics)
-                if matchedMetrics > MINIMUM_MATCHED_METRICS:
-                    result.append((profileId, matchedMetrics))
+            for m in matches:
+                if m.primary_ack is True and m.secondary_ack is True:
+                    if m.primary_id == id:
+                        profiles_promises.append(
+                            reps.profile_repository.get(m.secondary_id)
+                        )
+                    else:   
+                        profiles_promises.append(
+                            reps.profile_repository.get(m.primary_id)
+                        )
 
-            # sorting by matchedMetrics so that most similar profiles will be at the beginning of array
-            result.sort(key=lambda x: x[1], reverse=True)
-
-        return result
+            profiles = await asyncio.gather(*profiles_promises)
+            return profiles
 
 
 matching_repository = SqlMatchingRepository()
