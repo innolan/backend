@@ -5,12 +5,8 @@ import asyncio
 from sqlalchemy import delete, select
 from src.repositories.baserepo import SqlBaseRepository
 
-from src.exceptions import (
-    EntityNotFoundException,
-    NoMetricException,
-    NotImplementedException,
-)
 from src.storage.sql.models import Metric, Match
+import src.exceptions as exceptions
 import src.utils.messages as messages
 import src.schemas as schemas
 import src.repositories as reps
@@ -21,6 +17,12 @@ COMPARE_METRICS_VALUE = 0.3
 
 class SqlMatchingRepository(SqlBaseRepository):
     async def match(self, primary_id: int, secondary_id: int):
+        # Ensure that primary and secondary IDs are different
+        if primary_id == secondary_id:
+            raise exceptions.BadRequestException(
+                "Primary ID cannot be equal to secondary ID (selfmatching)"
+            )
+
         # Ensure that the primary id is the largest
         if primary_id > secondary_id:
             primary_id, secondary_id = secondary_id, primary_id
