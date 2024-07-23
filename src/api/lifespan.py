@@ -14,6 +14,7 @@ async def setup_repositories() -> SQLAlchemyStorage:
         auth_repository,
         profile_repository,
         metric_repository,
+        matching_repository,
     )
 
     storage = SQLAlchemyStorage.from_url(dburl)
@@ -22,7 +23,8 @@ async def setup_repositories() -> SQLAlchemyStorage:
     userinfo_repository.update_storage(storage)
     profile_repository.update_storage(storage)
     metric_repository.update_storage(storage)
-
+    matching_repository.update_storage(storage)
+    
     return storage
 
 
