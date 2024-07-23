@@ -5,8 +5,8 @@ import asyncio
 from sqlalchemy import delete, select
 from src.repositories.baserepo import SqlBaseRepository
 
-from src.storage.sql.models import Metric, Match
 import src.exceptions as exceptions
+from src.storage.sql.models import Match
 import src.utils.messages as messages
 import src.schemas as schemas
 import src.repositories as reps
@@ -58,14 +58,14 @@ class SqlMatchingRepository(SqlBaseRepository):
                 Match.primary_id == primary_id and Match.secondary_id == secondary_id
             )
             await session.execute(query)
-            return messages.OK
+            return messages.OK()
 
     async def delete_all(self, primary_id: int):
         """Delete particular all matches for a given ID"""
         async with self._create_session() as session:
             query = delete(Match).where(Match.primary_id == primary_id)
             await session.execute(query)
-            return messages.OK
+            return messages.OK()
 
     async def get(self, id) -> list[schemas.ProfileDTO]:
         async with self._create_session() as session:
@@ -84,7 +84,7 @@ class SqlMatchingRepository(SqlBaseRepository):
                         profiles_promises.append(
                             reps.profile_repository.get(m.secondary_id)
                         )
-                    else:   
+                    else:
                         profiles_promises.append(
                             reps.profile_repository.get(m.primary_id)
                         )
