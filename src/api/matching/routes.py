@@ -17,7 +17,7 @@ router = APIRouter(
 @router.put(
     "/{secondary_id}",
     responses={
-        200: {"model": schemas.MatchDTO},
+        200: {"model": messages.OK},
         401: {"model": messages.Unauthorized},
     },
 )
@@ -48,4 +48,4 @@ async def get_match(id: str = Depends(get_id)):
     },
 )
 async def delete_match(secondary_id: int, primary_id: int = Depends(get_id)):
-    return await reps.matching_repository.delete(primary_id, secondary_id)
+    return await reps.matching_repository.unmatch(primary_id, secondary_id)
