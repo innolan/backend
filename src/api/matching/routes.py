@@ -14,6 +14,17 @@ router = APIRouter(
 )
 
 
+@router.put(
+    "/{secondary_id}",
+    responses={
+        200: {"model": schemas.MatchDTO},
+        401: {"model": messages.Unauthorized},
+    },
+)
+async def put_match(secondary_id: int, primary_id: int = Depends(get_id)):
+    return await reps.matching_repository.match(primary_id, secondary_id)
+
+
 @router.get(
     "",
     responses={
@@ -29,12 +40,12 @@ async def get_match(id: str = Depends(get_id)):
     return profiles
 
 
-@router.put(
+@router.delete(
     "/{secondary_id}",
     responses={
-        200: {"model": schemas.MatchDTO},
-        401: {"model": messages.Message},
+        200: {"model": messages.OK},
+        401: {"model": messages.Unauthorized},
     },
 )
-async def get_match(secondary_id: int, primary_id: int = Depends(get_id)):
-    return await reps.matching_repository.match(primary_id, secondary_id)
+async def delete_match(secondary_id: int, primary_id: int = Depends(get_id)):
+    return await reps.matching_repository.delete(primary_id, secondary_id)
